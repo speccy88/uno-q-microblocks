@@ -21,23 +21,23 @@ class Tests(unittest.TestCase):
  def setUp(self):
   self.d=tempfile.TemporaryDirectory();p=Path(self.d.name);(p/'microblocks.html').write_text('real static fixture')
   self.t=Transport();self.client=TestClient(m.create_server(self.t,p,p),base_url='http://localhost')
-  self.code=(p/'access_token').read_text().strip();self.headers={'Origin':'http://localhost'}
+  self.headers={'Origin':'http://localhost'};self.data_path=p
  def tearDown(self):self.client.close();self.d.cleanup()
- def login(self):self.assertEqual(self.client.post('/login',json={'code':self.code},headers=self.headers).status_code,200)
- def test_auth_origin_host(self):
-  self.assertEqual(self.client.get('/api/status').status_code,401)
+ def test_no_login_origin_host(self):
+  self.assertEqual(self.client.get('/api/status').status_code,200)
+  self.assertFalse((self.data_path/'access_token').exists())
+  self.assertEqual(self.client.get('/microblocks.html').status_code,200)
+  self.assertNotIn('set-cookie',self.client.get('/microblocks.html').headers)
+  self.assertEqual(self.client.get('/signin',follow_redirects=False).headers['location'],'/microblocks.html')
   self.assertEqual(self.client.get('/healthz',headers={'Host':'untrusted.invalid'}).status_code,403)
   self.assertEqual(self.client.get('/healthz',headers={'Host':'8.8.8.8:8080'}).status_code,403)
   self.assertEqual(self.client.get('/healthz',headers={'Host':'192.168.0.2:8080'}).status_code,200)
-  self.assertEqual(self.client.post('/login',json={'code':self.code}).status_code,403)
-  self.assertEqual(self.client.post('/login',json={'code':'invalid'},headers=self.headers).status_code,401)
-  self.login();self.assertEqual(self.client.get('/api/status').status_code,200)
+  self.assertEqual(self.client.post('/login',json={}).status_code,405)
   self.assertIn("connect-src 'self'",self.client.get('/microblocks.html').headers['Content-Security-Policy'])
   for origin in ['http://evil.invalid','null']:
    with self.assertRaises(WebSocketDisconnect):
     with self.client.websocket_connect('ws://localhost/ws/vm',headers={'Origin':origin}):pass
  def test_binary_exclusive_reconnect(self):
-  self.login()
   with self.client.websocket_connect('ws://localhost/ws/vm',headers=self.headers) as ws:
    with self.assertRaises(WebSocketDisconnect):
     with self.client.websocket_connect('ws://localhost/ws/vm',headers=self.headers):pass
@@ -51,7 +51,6 @@ class Tests(unittest.TestCase):
    self.assertIsNone(self.t.owner)
   with self.client.websocket_connect('ws://localhost/ws/vm',headers=self.headers) as ws:ws.send_bytes(bytes([0,250,251,254,255]));self.assertEqual(ws.receive_bytes(),bytes([0,250,251,254,255]));ws.close();time.sleep(.02)
  def test_invalid_frames_close(self):
-  self.login()
   for payload in ['text',b'x'*8193]:
    with self.client.websocket_connect('ws://localhost/ws/vm',headers=self.headers) as ws:
     ws.send_text(payload) if type(payload) is str else ws.send_bytes(payload)

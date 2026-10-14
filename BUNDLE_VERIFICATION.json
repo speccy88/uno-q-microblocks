@@ -1,11 +1,13 @@
 {
-  "files": 1276,
+  "files": 1281,
   "private_values_found": 0,
   "machine_paths_found": 0,
   "raw_fonts_included": 0,
   "old_flash_backups_included": 0,
   "nested_app_zip_crc": "PASS",
-  "scope": "GitHub publication with graphical matrix input; browser acceptance pending",
+  "scope": "GitHub publication: login removed; graphical input verified in real browser and physical MCU",
   "source_community_zip_sha256": "1d907b06622f82e45af2b2f67ee4a618821ee2cc9a9efc8bbf9f4029fdfcfe24",
-  "graphical_input_gp_assertions": 270
+  "graphical_input_gp_assertions": 300,
+  "access_token_login": "removed",
+  "physical_matrix_tests": "all six presets and custom fast drag/erase/corner; exact 104-byte readback"
 }

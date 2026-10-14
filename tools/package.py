@@ -5,7 +5,7 @@ from pathlib import Path
 import argparse,hashlib,json,re,shutil,zipfile
 R=Path(__file__).resolve().parents[1];P=R/'release/uno-q-microblocks-community';P.mkdir(parents=True,exist_ok=True)
 parser=argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--output',type=Path,default=R/'dist/uno-q-microblocks-community-0.1.1.zip')
+parser.add_argument('--output',type=Path,default=R/'dist/uno-q-microblocks-community-0.1.2.zip')
 args=parser.parse_args()
 profile_file=R/'private-evidence/publication-redactions.json'
 profile=json.loads(profile_file.read_text()) if profile_file.exists() else {}

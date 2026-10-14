@@ -48,6 +48,26 @@ to startup {
 	assert (not (paintPixelAt s 2 '8'))
 	assert (not (paintPixelAt s 2 '77'))
 	assert (not (paintPixelAt s 2 7))
+	// A fast pointer can jump multiple cells between events; fill the stroke.
+	dragSlot = (newUnoQMatrixSlot nil)
+	assert (paintStrokeTo dragSlot 1)
+	assert (paintStrokeTo dragSlot 13)
+	for i 13 { assert ((at (contents dragSlot) i) == '7') }
+	setField dragSlot 'lastPaintIndex' nil
+	setField dragSlot 'paintValue' '0'
+	assert (paintStrokeTo dragSlot 13)
+	assert (paintStrokeTo dragSlot 1)
+	assert ((contents dragSlot) == (unoQMatrixPreset 'Clear'))
+	setField dragSlot 'lastPaintIndex' nil
+	setField dragSlot 'paintValue' '7'
+	assert (paintStrokeTo dragSlot 1)
+	assert (paintStrokeTo dragSlot 104)
+	for y 8 {
+		index = ((((y - 1) * 13) + (round (((y - 1) * 12) / 7))) + 1)
+		assert ((at (contents dragSlot) index) == '7')
+	}
+	assert (not (paintStrokeTo dragSlot 0))
+	assert (not (paintStrokeTo dragSlot 105))
 	mb = (newMicroBitDisplaySlot 16777217)
 	assert ((contents mb) == 16777217)
 	setContents mb 0

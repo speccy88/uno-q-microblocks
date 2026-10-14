@@ -158391,7 +158391,7 @@ method drawLine TurtlePen x0 y0 x1 y1 {
 // Original: Copyright 2019 John Maloney, Bernat Romagosa, and Jens Mönig.
 // Its ordinary String value preserves the existing UNO Q matrix ABI.
 
-defineClass UnoQMatrixSlot morph pixels paintValue inset stride ledSize
+defineClass UnoQMatrixSlot morph pixels paintValue inset stride ledSize lastPaintIndex
 
 to newUnoQMatrixSlot pattern {
 	return (initialize (new 'UnoQMatrixSlot') pattern)
@@ -158407,6 +158407,7 @@ method initialize UnoQMatrixSlot pattern {
 	stride = 10
 	ledSize = 8
 	paintValue = '7'
+	lastPaintIndex = nil
 	setContents this pattern
 	redraw this
 	return this
@@ -158466,7 +158467,7 @@ method pixelIndex UnoQMatrixSlot aHand {
 }
 
 method handEnter UnoQMatrixSlot aHand { setCursor 'crosshair' }
-method handLeave UnoQMatrixSlot aHand { setCursor 'default' }
+method handLeave UnoQMatrixSlot aHand { lastPaintIndex = nil; setCursor 'default' }
 
 method handDownOn UnoQMatrixSlot aHand {
 	if ((((x aHand) - (left morph)) / (blockScale)) >= 136) {
@@ -158475,6 +158476,7 @@ method handDownOn UnoQMatrixSlot aHand {
 	}
 	index = (pixelIndex this aHand)
 	if (isNil index) { return true }
+	lastPaintIndex = nil
 	paintValue = '7'
 	if ((at pixels index) != '0') { paintValue = '0' }
 	focusOn aHand this
@@ -158485,8 +158487,37 @@ method handDownOn UnoQMatrixSlot aHand {
 method handMoveFocus UnoQMatrixSlot aHand {
 	index = (pixelIndex this aHand)
 	if (notNil index) {
-		paintPixelAt this index paintValue
+		paintStrokeTo this index
+	} else {
+		x = (((x aHand) - (left morph)) / (blockScale))
+		y = (((y aHand) - (top morph)) / (blockScale))
+		if (or (x < inset) (y < inset) (x >= (inset + 130)) (y >= (inset + 80))) {
+			lastPaintIndex = nil
+		}
 	}
+	return true
+}
+
+method paintStrokeTo UnoQMatrixSlot index {
+	if (not (isClass index 'Integer')) { return false }
+	if (or (index < 1) (index > 104)) { return false }
+	if (or (isNil lastPaintIndex) (lastPaintIndex == index)) {
+		lastPaintIndex = index
+		return (paintPixelAt this index paintValue)
+	}
+	x0 = ((lastPaintIndex - 1) % 13)
+	y0 = (truncate ((lastPaintIndex - 1) / 13))
+	dx = (((index - 1) % 13) - x0)
+	dy = ((truncate ((index - 1) / 13)) - y0)
+	steps = (max (abs dx) (abs dy))
+	for step (range 0 steps) {
+		x = (round (x0 + ((dx * step) / steps)))
+		y = (round (y0 + ((dy * step) / steps)))
+		atPut pixels (((y * 13) + x) + 1) paintValue
+	}
+	lastPaintIndex = index
+	redraw this
+	raise morph 'inputChanged' this
 	return true
 }
 

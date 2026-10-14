@@ -3,7 +3,9 @@
 The graphical-input update adds `ide/UnoQMatrixSlot.gp` and extends the two GP
 runtime input/BlockSpec files. `patches/matrix-graphical-input.patch` is incremental
 over the v0.1.0 port; complete modified sources accompany it. The original
-MicroBitDisplaySlot and all MCU/FPGA runtime images remain unchanged.
+MicroBitDisplaySlot and all MCU/FPGA runtime images remain unchanged. The 0.1.2
+update adds stroke interpolation and content-versioned GP asset URLs, and removes
+the Python access-token/login/session requirement.
 
 | Component | Exact identity |
 |---|---|

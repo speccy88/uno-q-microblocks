@@ -59,19 +59,17 @@ See RECOVERY.md for first-install registration troubleshooting.
 ssh -N -L 18080:127.0.0.1:8080 UNO_Q_SSH_ALIAS
 ```
 
-Open `http://localhost:18080`. Enter the per-install code from the App's
-`data/access_token` file, read privately on your board. Do not save it in Git.
-The standard App Lab port publishes on board interfaces; do not forward it to
-the Internet. Public IP/domain Host headers are rejected, and programming
-requires authentication and an exact WebSocket origin. Close the old desktop
-PTY bridge before connecting: exclusivity applies to clients of this gateway,
-not every possible direct Router client.
+Open `http://localhost:18080` directly. There is no login, password, access code
+or session-cookie requirement. The standard App Lab port is also available on
+the board's private LAN address. WebSocket requests use the page's exact origin.
+Close the old desktop PTY bridge before connecting: one gateway browser owns
+the binary stream.
 
 ## Use the IDE
 
 Connection is automatic and uses WebSocket/Bridge, without WebSerial selection.
-Use Connect to reconnect after a disconnect. After an App restart, reload and
-sign in again. The hardware library loads automatically; `UNO Q Hardware` is
+Use Connect to reconnect after a disconnect. After an App restart, reload
+the page. The hardware library loads automatically; `UNO Q Hardware` is
 also a one-click import. The original editor, compiler, Start/Stop, variables,
 and output workflow are preserved. Firmware/BLE installation controls are
 blocked; runtime installation is only the explicit procedure above.
@@ -312,9 +310,8 @@ https://developer.chrome.com/docs/devtools/request-conditions.
 The standard App Lab port is for private LAN or local tunnel use. Use SSH for
 encrypted remote access and do not configure Internet forwarding. Numeric
 RFC1918/ULA/loopback Host values are accepted; public IPs and other domains are
-rejected. A random 256-bit per-install access code protects the UI and programming
-endpoint. HTTP-only, SameSite=Strict sessions and exact WebSocket Origin checks
-prevent cross-origin programming. Server restart expires session cookies.
+rejected. The IDE opens directly without a login, password, access token or
+session-cookie requirement. WebSocket requests retain their exact Origin check.
 
 One gateway browser owns the stream. This cannot prevent a separately launched
 legacy PTY/direct Router client from bypassing the gateway, so stop that client.
@@ -330,8 +327,7 @@ explicit reconnect; no firmware overwrite is attempted.
 
 The Python container uses the stock unprivileged App Lab user/group configuration
 (privileged=false, no added capabilities). Existing gpiod permissions provide LED
-access. No Docker socket mount or global LED chmod was added. Authentication
-codes, original LED snapshots, flash backups and machine-specific raw evidence
+access. No Docker socket mount or global LED chmod was added. Original LED snapshots, flash backups and machine-specific raw evidence
 must remain outside Git and public exports.
 ''',
 'MEMORY_REPORT.md':'''# Measured resource footprint

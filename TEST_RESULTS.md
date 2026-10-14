@@ -2,10 +2,15 @@
 
 These are newly executed tests, not simulation relabeled as hardware.
 
-The graphical matrix input is covered separately in [MATRIX_EDITOR.md](MATRIX_EDITOR.md):
-270 checks execute the real GP input/BlockSpec/Block event path, project save/load
-and compiler. Its new interactive browser acceptance is pending desktop access;
-the physical results below describe the preserved v0.1.0 hardware baseline.
+The current graphical matrix input is covered in [MATRIX_EDITOR.md](MATRIX_EDITOR.md).
+300 real GP assertions pass. Actual browser clicks, fast drag painting, erasing
+and all six presets produced exact 104-byte MCU framebuffer readback. SPI PING
+remained 195 with zero VM faults. The editor and status open without credentials
+or cookies; updated server tests and live handshakes pass.
+
+The remaining physical results below describe the preserved v0.1.0 runtime
+baseline. Current updates changed only Python/web/library files, with one App
+restart to remove login and zero MCU/FPGA firmware writes.
 
 | Acceptance item | Result | Evidence/scope |
 |---|---|---|
@@ -31,7 +36,8 @@ the physical results below describe the preserved v0.1.0 hardware baseline.
 | Generic-profile physical startup | NOT TESTED | Built/analyzed only, preserving this board's external FPGA runtime |
 | Interpreter/protocol host tests | PASS (automated) | 35 real wasm32 interpreter runs with simulated services/drivers |
 | Server transport/security host tests | PASS (automated) | 3 tests; 1000 random binary roundtrips plus fixtures; explicit simulated echo adapter |
-| Live authentication/origin/second client | PASS (physical server) | Unauthorized/foreign-origin/second-controller handshakes rejected |
+| Graphical matrix editing | PASS (browser + physical MCU) | All six presets, fast stroke, erased pixel and corner pixel; exact readback in matrix-live-observations.json |
+| Direct access/origin/second client | PASS (host tests + live HTTP/WS) | Editor and status open without credentials; foreign-origin and concurrent-controller checks retained |
 | Installer guard/rollback branches | PASS (automated) | 5 simulated OpenOCD tests; no physical recovery write repeated |
 
 Measured SPI RPC median is 17.3141 ms, maximum 20.8680 ms for this workload.

@@ -15,7 +15,7 @@ class MicroBlocksBridge:
   self.thread=None
  def start(self):
   self.transport.start();self.thread=threading.Thread(target=self.server.run,name='microblocks-http',daemon=True);self.thread.start()
-  print('MicroBlocks: authenticated private-network port 8080. Access code stored in data/access_token. No MCU upload performed.',flush=True)
+  print('MicroBlocks: private-network port 8080; open the IDE directly. No MCU upload performed.',flush=True)
  def stop(self):
   self.server.should_exit=True
   if self.thread:self.thread.join(5)

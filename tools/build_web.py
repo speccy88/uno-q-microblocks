@@ -50,6 +50,10 @@ html=html[:a]+html[b:]
 # Network edition cannot access USB/DFU firmware controls. Dedicated installer only.
 html=html.replace('<script type="text/javascript" src="flasher.js" defer></script>','')
 html=html.replace('\t\t<!-- GP Init -->','\t\t<script src="unoq-network.js"></script>\n\t\t<!-- GP Init -->')
+# Version the GP bundle together: cached JavaScript metadata must match its data file.
+bundle_hash=hashlib.sha256(b''.join((web/n).read_bytes() for n in ('gp_wasm.js','gp_wasm.data','gp_wasm.wasm'))).hexdigest()[:16]
+html=html.replace('<script type="text/javascript" src="gp_wasm.js"></script>',
+ '<script>Module.locateFile=function(name,prefix){return prefix+name+"?v='+bundle_hash+'";};</script>\n\t\t<script type="text/javascript" src="gp_wasm.js?v='+bundle_hash+'"></script>')
 (web/'microblocks.html').write_text(html)
 # Private resident-board IDE uses direct local assets; no stale cross-session PWA cache.
 sp=web/'gpSupport.js';sp.write_text(sp.read_text().replace("navigator.serviceWorker.register('sw.js');","// UNO Q: local server assets, service worker registration disabled."))

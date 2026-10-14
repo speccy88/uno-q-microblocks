@@ -8,13 +8,14 @@ This community port extends an existing, physically tested UNO Q implementation.
 MicroBlocks and its GP editor remain upstream projects; see [licensing](LICENSING.md)
 and [pinned source revisions](SOURCE_REVISIONS.md).
 
-![MicroBlocks connected to the physical UNO Q](evidence/screenshots/browser-final-confirmed.png)
+![MicroBlocks connected to the physical UNO Q](evidence/screenshots/matrix-editor-direct-access.png)
 
 ## Start here
 
 Read [START_HERE.md](START_HERE.md) for installation and use. The importable App
 is [dist/microblocks-uno-q-app.zip](dist/microblocks-uno-q-app.zip); a complete
-community ZIP is available under this repository's Releases.
+community ZIP is available under this repository's Releases. The editor opens
+directly on port 8080, without an access token, password or login.
 
 The MCU runtime is installed separately using the guarded procedure in
 [RECOVERY.md](RECOVERY.md). Normal App start, stop, restart and browser reconnect
@@ -30,7 +31,7 @@ the loader before and after an explicit application update.
 - Physical STM32 SmallVM v417 bytecode upload, execution and reconnection.
 - RGB LEDs 1/2 through a bounded Linux service queue; LEDs 3/4 directly on MCU.
 - Native 13×8 LED matrix primitives, clickable image blocks and preset pictures.
-- One authenticated browser controller, binary framing and bounded buffers.
+- One browser controller with direct access, binary framing and bounded buffers.
 - Existing PacoBlaze/SPI service preserved in the combined runtime profile.
 
 | Evidence | Result |
@@ -41,6 +42,8 @@ the loader before and after an explicit application update.
 | Visible hardware | Owner confirmed heart/checkerboard and sequential red/green/blue LEDs |
 | App lifecycle | Import/start/restart and webview verified; MCU uptime preserved |
 | Interpreter host tests | 35 executable wasm32 runs; simulated services/drivers |
+| Graphical matrix input | 300 real GP assertions; all six presets and custom drawing match physical MCU readback |
+| Direct browser access | HTTP 200 without credentials/cookies; live MCU connection verified |
 | Binary server tests | 1,000 randomized round trips; simulated echo adapter |
 
 See [TEST_RESULTS.md](TEST_RESULTS.md) for measured timing, corrected failures and

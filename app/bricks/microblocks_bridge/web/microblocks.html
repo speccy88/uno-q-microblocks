@@ -153,7 +153,8 @@
 		<script type="text/javascript" src="emModule.js"></script>
 		<script type="text/javascript" src="gpSupport.js"></script>
 		<script type="text/javascript" src="FileSaver.js"></script>
-		<script type="text/javascript" src="gp_wasm.js"></script>
+		<script>Module.locateFile=function(name,prefix){return prefix+name+"?v=26eb855451371f4c";};</script>
+		<script type="text/javascript" src="gp_wasm.js?v=26eb855451371f4c"></script>
 
 
 		<!-- IDE -->

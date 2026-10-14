@@ -1,13 +1,16 @@
 {
+  "utc": "2026-10-14T16:17:57.388006+00:00",
   "file_hashes": {
-    "gp_wasm.data": "32fd1f2b7c53ab4d70fbc5521b1872b9f26c7edc811bd9b4b2bbe4974ca485d5",
-    "gp_wasm.js": "bfdb8cf9f21284e460303d28b76a90f72f46e367549bacd21134942e5f85a248",
-    "gp_wasm.wasm": "74c3e1e191270738e89c4d07316ff17d18fd071ac2f94cfe1ca889a13164b28f",
+    "gp_wasm.data": "5f11822f1e3fdbd3036c2a2140c415969c6a6bdc9e70b5be274a50258f773940",
+    "gp_wasm.js": "5ff85ece9368ae3c7d53f7d21185d0ce5668e3670090b68ea713d6107cfecbb1",
+    "gp_wasm.wasm": "79d299c6fea8278bbcff57d02121684c25e3ac2f94f29df0e8bb6733a99e8a87",
+    "microblocks.html": "70247e296395695018fa30312c87315eeb622624e721d1831fe9c24c3b517f76",
     "unoq-network.js": "7b20c895b599613f003c5b52566698c0a2638acf72db594bfa37fc6ab27f311c"
   },
   "readback": "PASS",
-  "app_restarts": 0,
+  "app_restarts": 1,
   "mcu_firmware_writes": 0,
   "fpga_flash_writes": 0,
-  "backup_sha256": "65843cccad7fc65bf3df97ba6ed9ff5053e5f2d61af14b7dbbee7534c34ea3aa"
+  "reason_for_app_restart": "remove access-token login",
+  "previous_web_backup_sha256": "65843cccad7fc65bf3df97ba6ed9ff5053e5f2d61af14b7dbbee7534c34ea3aa"
 }

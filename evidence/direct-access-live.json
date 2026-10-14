@@ -1,0 +1,49 @@
+{
+  "direct_status": 200,
+  "host_rejection": 403,
+  "csp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'",
+  "direct_access_status": {
+    "runtime_ready": true,
+    "hardware_available": true,
+    "host_service_error": null,
+    "controller_connected": true,
+    "error": null,
+    "queues": {
+      "input": 0,
+      "output": 0
+    },
+    "limits": {
+      "bridge_chunk": 192,
+      "queue_bytes": 65536,
+      "websocket_message": 8192
+    },
+    "counters": {
+      "input_bytes": 3990,
+      "output_bytes": 2225,
+      "idle_discarded_bytes": 0,
+      "sessions": 3,
+      "rpc_errors": 0,
+      "host_actions": 0,
+      "host_errors": 0
+    },
+    "mcu": {
+      "uptime_ms": 63254184,
+      "vm_fault": 0,
+      "task_count": 0,
+      "object_store_free": 16384
+    },
+    "linux_leds": {
+      "max_brightness": {
+        "1r": 1,
+        "1g": 1,
+        "1b": 1,
+        "2r": 1,
+        "2g": 1,
+        "2b": 1
+      }
+    }
+  },
+  "origin_rejection": 403,
+  "second_controller": 403,
+  "result": "PASS"
+}
