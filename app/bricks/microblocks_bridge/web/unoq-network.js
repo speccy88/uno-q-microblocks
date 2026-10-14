@@ -62,7 +62,7 @@
   const bar=document.querySelector('[data-ide="controls"]');
   const status=document.createElement('span');status.id='unoq-status';status.setAttribute('role','status');bar.prepend(status);
   const menu=document.createElement('select');menu.setAttribute('aria-label','UNO Q examples');
-  [['','UNO Q examples'],['arithmetic','Arithmetic'],['output','500 outputs'],['rgb','RGB LEDs'],['matrix','LED matrix'],['combined','Combined hardware']].forEach(([value,text])=>{const option=document.createElement('option');option.value=value;option.textContent=text;menu.append(option);});
+  [['','UNO Q examples'],['arithmetic','Arithmetic'],['output','500 outputs'],['rgb','RGB LEDs'],['matrix-drawing','Draw matrix image'],['matrix','LED matrix'],['combined','Combined hardware']].forEach(([value,text])=>{const option=document.createElement('option');option.value=value;option.textContent=text;menu.append(option);});
   menu.onchange=()=>{if(menu.value)GP.apiCall('unoq.openExample',[menu.value]);menu.value='';};bar.prepend(menu);
   const load=document.createElement('button');load.textContent='UNO Q Hardware';load.onclick=()=>GP.apiCall('unoq.loadLibrary');bar.prepend(load);
   GP.apiCall('unoq.loadLibrary');

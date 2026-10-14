@@ -102,7 +102,7 @@ method setSlotInfo BlockSpec typeString defaults {
 			if ((count w) == 2) {
 				menuSelector = (at w 2)
 			}
-			if (not (contains (array 'num' 'cmt' 'str' 'auto' 'bool' 'color' 'cmd' 'var' 'menu' 'microbitDisplay') type)) {
+			if (not (contains (array 'num' 'cmt' 'str' 'auto' 'bool' 'color' 'cmd' 'var' 'menu' 'microbitDisplay' 'unoqMatrix') type)) {
 				hint = type
 				type = 'any'
 			}
@@ -168,6 +168,9 @@ method inputSlot BlockSpec slotIndex blockColor isFormalParameter argNames {
 	if ('color' == slotType) {
 		slotContent = (at info 2)
 		return (newColorSlot slotContent)
+	}
+	if ('unoqMatrix' == slotType) {
+		return (newUnoQMatrixSlot (at info 2))
 	}
 	if ('microbitDisplay' == slotType) {
 		slotContent = (at info 2)

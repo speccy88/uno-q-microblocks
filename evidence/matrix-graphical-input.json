@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-14T12:43:33.219857+00:00",
+  "gp_assertions": 270,
+  "gp_interpreter": "actual upstream GP compiled to wasm32 and executed by Node",
+  "bitmap_rendering_in_host_harness": "disabled; browser acceptance pending",
+  "checks": [
+    "all 104 cells",
+    "gap/bounds rejection",
+    "six presets",
+    "paint/erase",
+    "grayscale preservation",
+    "original 5x5 behavior",
+    "BlockSpec construction",
+    "Block inputChanged updates instruction argument",
+    "four exact .ubp save/load round trips",
+    "actual SmallVM compiler 104-byte image literal",
+    "show-image helper compilation"
+  ],
+  "web_asset_readback": "PASS",
+  "existing_physical_spi_ping": 195,
+  "mcu_firmware_writes": 0,
+  "fpga_flash_writes": 0,
+  "app_restarts": 0,
+  "interactive_browser_test": "PENDING: Mac locked; existing VM controller must save/close",
+  "app_lab_import": "PASS (import only, new copy not started)",
+  "app_zip_sha256": "ae223379c4bb91bb55e18d7b79ecbbd96a3b63c414d7fec509defce822158eb1",
+  "final_zip_asset_change": "Original attribution comment retained in GP source; functional import already accepted"
+}

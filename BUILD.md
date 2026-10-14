@@ -12,6 +12,7 @@ python3 tools/build_runtime.py --target UNO_Q_SSH_ALIAS
 python3 tools/build_runtime.py --target UNO_Q_SSH_ALIAS --preserve-pacoblaze
 python3 tools/build_web.py
 python3 tools/test_host_vm.py
+python3 tools/test_matrix_slot.py
 python3 tests/test_transport.py
 python3 tests/test_installer_guards.py
 python3 -m venv .venv

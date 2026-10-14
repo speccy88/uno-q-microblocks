@@ -1,0 +1,13 @@
+{
+  "file_hashes": {
+    "gp_wasm.data": "32fd1f2b7c53ab4d70fbc5521b1872b9f26c7edc811bd9b4b2bbe4974ca485d5",
+    "gp_wasm.js": "bfdb8cf9f21284e460303d28b76a90f72f46e367549bacd21134942e5f85a248",
+    "gp_wasm.wasm": "74c3e1e191270738e89c4d07316ff17d18fd071ac2f94cfe1ca889a13164b28f",
+    "unoq-network.js": "7b20c895b599613f003c5b52566698c0a2638acf72db594bfa37fc6ab27f311c"
+  },
+  "readback": "PASS",
+  "app_restarts": 0,
+  "mcu_firmware_writes": 0,
+  "fpga_flash_writes": 0,
+  "backup_sha256": "65843cccad7fc65bf3df97ba6ed9ff5053e5f2d61af14b7dbbee7534c34ea3aa"
+}

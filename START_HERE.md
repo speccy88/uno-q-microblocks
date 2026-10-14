@@ -73,6 +73,9 @@ and output workflow are preserved. Firmware/BLE installation controls are
 blocked; runtime installation is only the explicit procedure above.
 
 Choose **RGB LEDs**, wait for the project to finish loading, then press Start.
+Choose **Draw matrix image** to edit a picture directly in a 13×8 block: click
+or drag its pixels, or use the arrow to choose a preset. Press Start to show it.
+The image remains a normal saved program input; no MCU update is needed.
 LED 1 through 4 cycle red/green/blue for 500 ms each. **LED matrix** cycles full,
 blank, checkerboard, diagonal and heart. **Combined hardware** runs independent
 RGB and matrix tasks. **Arithmetic** contains a clickable `5 + 7` reporter;

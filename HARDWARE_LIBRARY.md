@@ -1,5 +1,22 @@
 # UNO Q hardware blocks
 
+## Graphical matrix images
+
+`UNO Q show image` contains a clickable 13×8 preview. Click a dark pixel to turn
+it on, or a lit pixel to turn it off. Drag to paint several pixels with the same
+on/off value. The arrow opens Heart, Smile, Checkerboard, Diagonal, All on and
+Clear presets. Choosing `Draw matrix image` in the examples menu opens a simple
+one-image program; press Start after editing it.
+
+`UNO Q matrix draw image` stages the same graphical image for the existing
+separate `matrix show` operation. Previous projects with 104-character patterns
+retain their values, including brightness digits 0–7. Clicking paints brightness
+7 or 0; untouched grayscale pixels keep their original brightness.
+
+The graphical input is serialized as an ordinary row-major, 104-character string
+and compiles through the existing `matrixPattern`/`matrixShow` primitives. No MCU
+firmware or FPGA update is required. The original micro:bit 5×5 input is separate.
+
 `examples/UNO_Q_Hardware.ubl` is a standard MicroBlocks library.
 `UNO_Q_Hardware.ubp` is its editable project. They are embedded in the pinned
 editor build and are automatically imported using the upstream library mechanism.

@@ -29,7 +29,7 @@ the loader before and after an explicit application update.
 - Official MicroBlocks 2.5.8 editor/compiler with locally served assets.
 - Physical STM32 SmallVM v417 bytecode upload, execution and reconnection.
 - RGB LEDs 1/2 through a bounded Linux service queue; LEDs 3/4 directly on MCU.
-- Native 13×8 LED matrix primitives and editable hardware examples.
+- Native 13×8 LED matrix primitives, clickable image blocks and preset pictures.
 - One authenticated browser controller, binary framing and bounded buffers.
 - Existing PacoBlaze/SPI service preserved in the combined runtime profile.
 
@@ -56,6 +56,7 @@ commands compile and run host tests without flashing:
 
 ```sh
 python3 tools/test_host_vm.py
+python3 tools/test_matrix_slot.py
 python3 tests/test_transport.py
 python3 tests/test_installer_guards.py
 python3 -m venv .venv

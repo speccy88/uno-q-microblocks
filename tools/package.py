@@ -2,8 +2,11 @@
 # SPDX-License-Identifier: MIT
 """Create a deny-by-default sanitized publication tree and one community ZIP."""
 from pathlib import Path
-import hashlib,json,re,shutil,zipfile
+import argparse,hashlib,json,re,shutil,zipfile
 R=Path(__file__).resolve().parents[1];P=R/'release/uno-q-microblocks-community';P.mkdir(parents=True,exist_ok=True)
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--output',type=Path,default=R/'dist/uno-q-microblocks-community-0.1.1.zip')
+args=parser.parse_args()
 profile_file=R/'private-evidence/publication-redactions.json'
 profile=json.loads(profile_file.read_text()) if profile_file.exists() else {}
 SECRET=profile.get('values',[])
@@ -31,11 +34,12 @@ for f in R.glob('*.md'):copy(f,P/f.name,True)
 for name in ['.gitignore','.dockerignore']:copy(R/name,P/name)
 for d in ['app','examples','firmware','patches','tests']:copy(R/d,P/d)
 # Only public, parameterized tools; the local exact-predecessor deployment helper is private.
-for name in ['build_runtime.py','build_web.py','test_host_vm.py','install_runtime.py','prepare_app.py','verify_browser_log.py','test_live_security.py','observe_hardware.py','stdio_rpc.py','write_docs.py','package.py']:
+for name in ['build_runtime.py','build_web.py','test_host_vm.py','test_matrix_slot.py','install_runtime.py','prepare_app.py','verify_browser_log.py','test_live_security.py','observe_hardware.py','stdio_rpc.py','write_docs.py','package.py']:
  copy(R/'tools'/name,P/'tools'/name)
 copy(R/'dist/microblocks-uno-q-app.zip',P/'dist/microblocks-uno-q-app.zip')
 for name,label in [('smallvm_unoq','generic'),('smallvm_combined','with_pacoblaze')]:
  base=R/'build'/('output-'+name)
+ if not base.exists():base=R/'runtime'/label
  for fn in [name+'.ino.elf-zsk.bin','image.json']:copy(base/fn,P/'runtime'/label/fn)
 copy(R/'build/web-assets-sha256.json',P/'evidence/web-assets-sha256.json')
 # Source required by the real VM and GP builds, not old apps, binaries or raw fonts.
@@ -53,6 +57,7 @@ copy(R/'sources/arduino-libraries',P/'sources/arduino-libraries')
 # Public evidence is a sanitized copy, never a whole private directory/old archive.
 files=['baseline-archive-check.json','blueprint-check.json','browser-baseline.json','browser-baseline.frames.json','browser-final-runtime.json','browser-final-runtime.frames.json','events-final-runtime.jsonl','rgb-observations.json','matrix-observations.json','combined-connected.json','combined-disconnected.json','memory-report.json','runtime-startup.json','led-restore-baseline.json','live-security.json','gui-spi-events.json','server-tests-final.log','transport-tests-final.log','installer-guard-tests.log','host-tests-reproduced.json','host-build-reproduced.log','build-smallvm_unoq.log','build-smallvm_combined.log','web-ide-build-final.log','runtime-install.json','runtime-ack-install.json','post-install-mcu-restart.json','app-start-baseline.log','app-restart-baseline.log','app-start-standard-webview.log','app-export-final.log','app-import-final.json','imported-app-start.log','import-runtime-status.log','standard-app-status.log','app-lifecycle.json','final-led-restore.json','docker-after.txt','package-inputs.json','hardware-verification.json','gitleaks-sealed.log','extracted-final-test.json','share-import.json']
 files.append('visual-confirmations.json')
+if (R/'evidence').exists():copy(R/'evidence',P/'evidence',True)
 for name in files:
  f=R/'private-evidence'/name
  if f.exists():copy(f,P/'evidence'/name,True)
@@ -92,7 +97,7 @@ if errors:raise SystemExit('Publication scan failed: '+str(errors[:12]))
 manifest={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in P.rglob('*') if f.is_file() and f.name not in ['SHA256SUMS','BUNDLE_VERIFICATION.json']}
 (P/'SHA256SUMS').write_text(''.join(h+'  '+n+'\n' for n,h in sorted(manifest.items())))
 (P/'BUNDLE_VERIFICATION.json').write_text(json.dumps({'files':len(manifest),'private_values_found':0,'machine_paths_found':0,'raw_fonts_included':0,'old_flash_backups_included':0,'nested_app_zip_crc':'PASS'},indent=2)+'\n')
-archive=R.parent/'uno-q-microblocks-community-2026-10-13.zip'
+archive=args.output.resolve();archive.parent.mkdir(parents=True,exist_ok=True)
 with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
  for f in sorted(P.rglob('*')):
   if f.is_file():z.write(f,str(f.relative_to(P.parent)))

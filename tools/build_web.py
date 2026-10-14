@@ -2,6 +2,11 @@
 from pathlib import Path
 import hashlib,json,shutil,subprocess,re
 R=Path(__file__).resolve().parents[1];S=R/'sources/smallvm';web=R/'app/bricks/microblocks_bridge/web';web.mkdir(parents=True,exist_ok=True);(R/'private-evidence').mkdir(exist_ok=True);(R/'build').mkdir(exist_ok=True)
+# The editable community library/examples are the build's authoritative inputs.
+shutil.copy2(R/'examples/UNO_Q_Hardware.ubl',S/'Libraries/UNO_Q_Hardware.ubl')
+(S/'Examples/UNO Q').mkdir(parents=True,exist_ok=True)
+for example in (R/'examples').glob('*.ubp'):
+ shutil.copy2(example,S/'Examples/UNO Q'/example.name)
 api=S/'ide/MicroBlocksAPI.gp';text=api.read_text()
 needle="\t// Project\n"
 addition="""\t// UNO Q: local, pinned files imported through the original editor/compiler.
@@ -12,7 +17,7 @@ addition="""\t// UNO Q: local, pinned files imported through the original editor
 \t} (endPoint == 'unoq.openExample') {
 \t\trespondAPIRequest this id 0
 \t\tname = (at params 1)
-\t\tif (isOneOf name 'arithmetic' 'output' 'rgb' 'matrix' 'combined') {
+\t\tif (isOneOf name 'arithmetic' 'output' 'rgb' 'matrix' 'combined' 'matrix-drawing') {
 \t\t\tdata = (readEmbeddedFile (join 'Examples/UNO Q/' name '.ubp'))
 \t\t\tif (notNil data) { openProject editor data (join name '.ubp') }
 \t\t}

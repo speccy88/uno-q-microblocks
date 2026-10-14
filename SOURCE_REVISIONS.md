@@ -1,5 +1,10 @@
 # Pinned inputs
 
+The graphical-input update adds `ide/UnoQMatrixSlot.gp` and extends the two GP
+runtime input/BlockSpec files. `patches/matrix-graphical-input.patch` is incremental
+over the v0.1.0 port; complete modified sources accompany it. The original
+MicroBitDisplaySlot and all MCU/FPGA runtime images remain unchanged.
+
 | Component | Exact identity |
 |---|---|
 | Canonical SmallVM/GP | https://codeberg.org/MicroBlocks/smallvm commit 2071df569623ba9cdcd6f8106b61796e047df38b; IDE 2.5.8, VM v417 |

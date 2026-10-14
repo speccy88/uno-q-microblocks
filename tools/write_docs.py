@@ -77,6 +77,7 @@ and output workflow are preserved. Firmware/BLE installation controls are
 blocked; runtime installation is only the explicit procedure above.
 
 Choose **RGB LEDs**, wait for the project to finish loading, then press Start.
+Choose **Draw matrix image** to edit the 13x8 graphical block, then press Start.
 LED 1 through 4 cycle red/green/blue for 500 ms each. **LED matrix** cycles full,
 blank, checkerboard, diagonal and heart. **Combined hardware** runs independent
 RGB and matrix tasks. **Arithmetic** contains a clickable `5 + 7` reporter;
@@ -146,6 +147,8 @@ responses were decoded independently from raw traffic.
 ''',
 'HARDWARE_LIBRARY.md':'''# UNO Q hardware blocks
 
+See MATRIX_EDITOR.md for the clickable 13x8 image input, presets and its acceptance results.
+
 `examples/UNO_Q_Hardware.ubl` is a standard MicroBlocks library.
 `UNO_Q_Hardware.ubp` is its editable project. They are embedded in the pinned
 editor build and are automatically imported using the upstream library mechanism.
@@ -188,6 +191,7 @@ python3 tools/build_runtime.py --target UNO_Q_SSH_ALIAS
 python3 tools/build_runtime.py --target UNO_Q_SSH_ALIAS --preserve-pacoblaze
 python3 tools/build_web.py
 python3 tools/test_host_vm.py
+python3 tools/test_matrix_slot.py
 python3 tests/test_transport.py
 python3 tests/test_installer_guards.py
 python3 -m venv .venv

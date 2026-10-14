@@ -2,6 +2,11 @@
 
 These are newly executed tests, not simulation relabeled as hardware.
 
+The graphical matrix input is covered separately in [MATRIX_EDITOR.md](MATRIX_EDITOR.md):
+270 checks execute the real GP input/BlockSpec/Block event path, project save/load
+and compiler. Its new interactive browser acceptance is pending desktop access;
+the physical results below describe the preserved v0.1.0 hardware baseline.
+
 | Acceptance item | Result | Evidence/scope |
 |---|---|---|
 | Existing baseline preserved | PASS | Input archive CRC/1207-file verification; original phase directories/backups kept private |

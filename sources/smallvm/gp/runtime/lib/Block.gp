@@ -30,7 +30,7 @@ to block type color opName {
 	}
 	argValues = (list op)
 	for each group {
-		if (isAnyClass each 'InputSlot' 'BooleanSlot' 'ColorSlot' 'CommandSlot' 'MicroBitDisplaySlot') {add argValues (contents each)}
+		if (isAnyClass each 'InputSlot' 'BooleanSlot' 'ColorSlot' 'CommandSlot' 'MicroBitDisplaySlot' 'UnoQMatrixSlot') {add argValues (contents each)}
 	}
 	setField block 'type' type
 	setField block 'labelParts' labelParts
@@ -146,7 +146,7 @@ method fixLayout Block {
 
 	// arrange label parts horizontally and break up into lines
 	op = (primName expression)
-	breakLineBeforeFirstArg = (isOneOf op '[display:mbDisplay]' 'setNeoPixelColors10')
+	breakLineBeforeFirstArg = (isOneOf op '[display:mbDisplay]' 'setNeoPixelColors10' 'unoqShowImage' '[unoq:matrixPattern]')
 	maxArgsPerLine = 6
 	if ('setNeoPixelColors10' == op) { maxArgsPerLine = 5 }
 	currentLine = (list)
@@ -504,7 +504,7 @@ method inputIndex Block anInput {
 	}
 
 	for each items {
-		if (isAnyClass each 'InputSlot' 'BooleanSlot' 'ColorSlot' 'CommandSlot' 'Block' 'MicroBitDisplaySlot') {
+		if (isAnyClass each 'InputSlot' 'BooleanSlot' 'ColorSlot' 'CommandSlot' 'Block' 'MicroBitDisplaySlot' 'UnoQMatrixSlot') {
 			idx += 1
 			if (each === anInput) {return idx}
 		}
@@ -515,7 +515,7 @@ method inputIndex Block anInput {
 method inputs Block {
 	// disregard variable accessing
 	return (filter
-		(function each {return (isAnyClass each 'InputSlot' 'BooleanSlot' 'ColorSlot' 'CommandSlot' 'Block' 'MicroBitDisplaySlot')})
+		(function each {return (isAnyClass each 'InputSlot' 'BooleanSlot' 'ColorSlot' 'CommandSlot' 'Block' 'MicroBitDisplaySlot' 'UnoQMatrixSlot')})
 		(flattened labelParts)
 	)
 }
@@ -1769,7 +1769,7 @@ method initializeForNode Block commandOrReporter {
 				replaceInput this slot (toBlock each) false
 			}
 		} else {
-			if (isAnyClass slot 'InputSlot' 'BooleanSlot' 'ColorSlot' 'MicroBitDisplaySlot') {
+			if (isAnyClass slot 'InputSlot' 'BooleanSlot' 'ColorSlot' 'MicroBitDisplaySlot' 'UnoQMatrixSlot') {
 				setContents slot each true
 			} (and (isClass slot 'Block') (isRenamableVar slot)) {
 				renameVariableTo slot each
@@ -2082,7 +2082,7 @@ method addAllLabelParts Block {
 	// create a new expression with the matching number of empty argument slots
 	cmdAndArgs = (list (blockOp blockSpec))
 	for p allParts {
-		if (isAnyClass p 'InputSlot' 'BooleanSlot' 'ColorSlot' 'CommandSlot' 'Block' 'MicroBitDisplaySlot') {
+		if (isAnyClass p 'InputSlot' 'BooleanSlot' 'ColorSlot' 'CommandSlot' 'Block' 'MicroBitDisplaySlot' 'UnoQMatrixSlot') {
 			add cmdAndArgs nil
 		}
 	}
@@ -2099,7 +2099,7 @@ method addAllLabelParts Block {
 	// in something different)
 	if (not (isPrototype this)) {
 		for p allParts {
-			if (isAnyClass p 'InputSlot' 'BooleanSlot' 'ColorSlot' 'CommandSlot' 'Block' 'MicroBitDisplaySlot') {
+			if (isAnyClass p 'InputSlot' 'BooleanSlot' 'ColorSlot' 'CommandSlot' 'Block' 'MicroBitDisplaySlot' 'UnoQMatrixSlot') {
 				inputChanged this p
 			}
 		}

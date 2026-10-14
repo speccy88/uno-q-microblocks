@@ -7,3 +7,7 @@ runtime-recovery/
 __pycache__/
 *.pyc
 .DS_Store
+/sources/smallvm/chromeApp/MicroBlocks/
+/sources/smallvm/chromeApp/webapp/gp_wasm.*
+/release/
+/dist/uno-q-microblocks-community-*.zip

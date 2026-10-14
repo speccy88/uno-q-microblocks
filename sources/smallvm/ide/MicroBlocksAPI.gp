@@ -70,7 +70,7 @@ method dispatchCall MicroBlocksAPI callObject {
 	} (endPoint == 'unoq.openExample') {
 		respondAPIRequest this id 0
 		name = (at params 1)
-		if (isOneOf name 'arithmetic' 'output' 'rgb' 'matrix' 'combined') {
+		if (isOneOf name 'arithmetic' 'output' 'rgb' 'matrix' 'combined' 'matrix-drawing') {
 			data = (readEmbeddedFile (join 'Examples/UNO Q/' name '.ubp'))
 			if (notNil data) { openProject editor data (join name '.ubp') }
 		}
