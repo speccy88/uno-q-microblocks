@@ -1,0 +1,4 @@
+{"utc": "2026-10-13T23:46:52.406621+00:00", "event": "health", "uptime_ms": 4046879, "vm_fault": 0, "task_count": 0, "object_store_free": 16384}
+{"utc": "2026-10-13T23:46:54.409669+00:00", "event": "health", "uptime_ms": 4048880, "vm_fault": 0, "task_count": 0, "object_store_free": 16384}
+{"utc": "2026-10-13T23:46:56.434129+00:00", "event": "health", "uptime_ms": 4050902, "vm_fault": 0, "task_count": 0, "object_store_free": 16384}
+{"ports":[{"port":"8080","source":"microblocks_bridge","serviceName":"webview"}]}

@@ -1,0 +1,20 @@
+{
+  "timestamp_utc": "2026-10-13T22:32:20.406995+00:00",
+  "command": [
+    "/usr/bin/ssh",
+    "-T",
+    "-S",
+    "<SSH_CONTROL>",
+    "-o",
+    "BatchMode=yes",
+    "-o",
+    "StrictHostKeyChecking=yes",
+    "-o",
+    "ConnectTimeout=8",
+    "arduino@<REDACTED>",
+    "sudo -S -p '' -- /opt/openocd/bin/openocd -d2 -s /opt/openocd -f openocd_gpiod.cfg -f <BOARD_HOME>/uno-q-fpga/phase4c-smallvm-ide/build/restart-current.cfg"
+  ],
+  "exit": 0,
+  "stdout": "",
+  "stderr": "Open On-Chip Debugger 0.12.0+dev-ge6a2c12f4 (2025-05-22-15:51)\nLicensed under GNU GPL v2\nFor bug reports, read\n\thttp://openocd.org/doc/doxygen/bugs.html\ndebug_level: 2\nclock_config\nInfo : Linux GPIOD JTAG/SWD bitbang driver (libgpiod v2)\nInfo : Note: The adapter \"linuxgpiod\" doesn't support configurable speed\nInfo : SWD DPIDR 0x0be12477\nInfo : [stm32u5.ap0] Examination succeed\nInfo : [stm32u5.cpu] Cortex-M33 r0p4 processor detected\nInfo : [stm32u5.cpu] target has 8 breakpoints, 4 watchpoints\nInfo : [stm32u5.cpu] Examination succeed\nInfo : [stm32u5.ap0] gdb port disabled\nInfo : [stm32u5.cpu] gdb port disabled\nshutdown command invoked\n"
+}

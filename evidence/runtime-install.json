@@ -1,0 +1,20 @@
+{
+  "timestamp_utc": "2026-10-13T22:29:24.930704+00:00",
+  "command": [
+    "/usr/bin/ssh",
+    "-T",
+    "-S",
+    "<SSH_CONTROL>",
+    "-o",
+    "BatchMode=yes",
+    "-o",
+    "StrictHostKeyChecking=yes",
+    "-o",
+    "ConnectTimeout=8",
+    "arduino@<REDACTED>",
+    "sudo -S -p '' -- python3 <BOARD_HOME>/uno-q-fpga/phase5-runtime/tools/install_private.py"
+  ],
+  "exit": 0,
+  "stdout": "Open On-Chip Debugger 0.12.0+dev-ge6a2c12f4 (2025-05-22-15:51)\nLicensed under GNU GPL v2\nFor bug reports, read\n\thttp://openocd.org/doc/doxygen/bugs.html\ndebug_level: 2\nclock_config\nInfo : Linux GPIOD JTAG/SWD bitbang driver (libgpiod v2)\nInfo : Note: The adapter \"linuxgpiod\" doesn't support configurable speed\nInfo : SWD DPIDR 0x0be12477\nInfo : [stm32u5.ap0] Examination succeed\nInfo : [stm32u5.cpu] Cortex-M33 r0p4 processor detected\nInfo : [stm32u5.cpu] target has 8 breakpoints, 4 watchpoints\nInfo : [stm32u5.cpu] Examination succeed\nInfo : [stm32u5.ap0] gdb port disabled\nInfo : [stm32u5.cpu] gdb port disabled\nCPU in Non-Secure state\n[stm32u5.cpu] halted due to debug-request, current mode: Thread \nxPSR: 0x41000000 pc: 0x08017f58 psp: 0x20002820\nInfo : device idcode = 0x30076482 (STM32U57/U58xx - Rev U : 0x3007)\nInfo : TZEN = 0 : TrustZone disabled by option bytes\nInfo : RDP level 0 (0xAA)\nInfo : flash size = 2048 KiB\nInfo : flash mode : dual-bank\nshutdown command invoked\n\nOpen On-Chip Debugger 0.12.0+dev-ge6a2c12f4 (2025-05-22-15:51)\nLicensed under GNU GPL v2\nFor bug reports, read\n\thttp://openocd.org/doc/doxygen/bugs.html\ndebug_level: 2\nclock_config\nInfo : Linux GPIOD JTAG/SWD bitbang driver (libgpiod v2)\nInfo : Note: The adapter \"linuxgpiod\" doesn't support configurable speed\nInfo : SWD DPIDR 0x0be12477\nInfo : [stm32u5.ap0] Examination succeed\nInfo : [stm32u5.cpu] Cortex-M33 r0p4 processor detected\nInfo : [stm32u5.cpu] target has 8 breakpoints, 4 watchpoints\nInfo : [stm32u5.cpu] Examination succeed\nInfo : [stm32u5.ap0] gdb port disabled\nInfo : [stm32u5.cpu] gdb port disabled\nCPU in Non-Secure state\n[stm32u5.cpu] halted due to debug-request, current mode: Thread \nxPSR: 0x41000000 pc: 0x08017f58 psp: 0x20002820\nInfo : device idcode = 0x30076482 (STM32U57/U58xx - Rev U : 0x3007)\nInfo : TZEN = 0 : TrustZone disabled by option bytes\nInfo : RDP level 0 (0xAA)\nInfo : flash size = 2048 KiB\nInfo : flash mode : dual-bank\nWarn : Adding extra erase range, 0x0812b970 .. 0x0812bfff\nshutdown command invoked\n\n",
+  "stderr": ""
+}

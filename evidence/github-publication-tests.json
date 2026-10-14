@@ -1,0 +1,16 @@
+{
+  "utc": "2026-10-14T01:18:48Z",
+  "scope": "Re-executed from a separate publication checkout; no firmware or hardware writes",
+  "interpreter_runs": 35,
+  "interpreter_results": "PASS",
+  "transport_methods": 4,
+  "transport_results": "PASS",
+  "server_methods": 3,
+  "server_random_roundtrips": 1000,
+  "server_results": "PASS",
+  "installer_guard_methods": 5,
+  "installer_guard_results": "PASS (simulated OpenOCD)",
+  "source_bundle_sha256": "1d907b06622f82e45af2b2f67ee4a618821ee2cc9a9efc8bbf9f4029fdfcfe24",
+  "hardware_scope": "Prior physical evidence preserved and checksum verified, not re-run for publication",
+  "commit_email": "GitHub noreply identity; global Git configuration unchanged"
+}

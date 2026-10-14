@@ -1,0 +1,16 @@
+module main
+author Codex
+version 1 0
+description 'Bounded physical IDE transport proof. No GPIO or FPGA programming.'
+variables count
+
+script 50 50 {
+whenStarted
+count = 0
+repeat 500 {
+count = (count + 1)
+sayIt count
+}
+}
+
+script 340 50 (5 + 7)

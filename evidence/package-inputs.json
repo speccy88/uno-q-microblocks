@@ -1,0 +1,10 @@
+{
+  "profiles_reproduced_with_bundled_libraries": {
+    "smallvm_unoq": "ee132fc4e0f567fa483669f6e12341ffdf7426701695161240ad791ab01ac0a8",
+    "smallvm_combined": "85db5cfa9e80812039afeea20f2cf24f1bb117faa8f7e1250486799cb19ee37e"
+  },
+  "app_archive_sha256": "bd48c23228ff3f6d4651b4832a7fb8eac3c3e46656741910086d1f6304bdecc9",
+  "final_app_archive_sha256": "ab9e143bd719829aad4e3b3951f6269a9e01d27665af9fbd5e8f1bd9571bdd35",
+  "final_asset_only_change": "Remove three unused upstream developer-path comments",
+  "web_firmware_assets": "Excluded unused other-board firmware images"
+}

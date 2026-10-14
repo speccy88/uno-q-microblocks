@@ -1,0 +1,98 @@
+{
+  "smallvm_unoq": {
+    "alloc_sections": [
+      {
+        "name": ".rodata",
+        "bytes": 2400,
+        "type": "SHT_PROGBITS"
+      },
+      {
+        "name": ".llext.rodata.noreloc",
+        "bytes": 3800,
+        "type": "SHT_PROGBITS"
+      },
+      {
+        "name": ".text",
+        "bytes": 61196,
+        "type": "SHT_PROGBITS"
+      },
+      {
+        "name": ".data",
+        "bytes": 84,
+        "type": "SHT_PROGBITS"
+      },
+      {
+        "name": ".bss",
+        "bytes": 57108,
+        "type": "SHT_NOBITS"
+      },
+      {
+        "name": ".exported_sym",
+        "bytes": 8,
+        "type": "SHT_PROGBITS"
+      },
+      {
+        "name": ".init_array",
+        "bytes": 24,
+        "type": "SHT_INIT_ARRAY"
+      },
+      {
+        "name": ".fini_array",
+        "bytes": 16,
+        "type": "SHT_FINI_ARRAY"
+      }
+    ],
+    "static_llext_bytes": 124636,
+    "application_arena_bytes": 262144,
+    "arena_margin_before_dynamic_allocations": 137508,
+    "data_bss_bytes": 57192
+  },
+  "smallvm_combined": {
+    "alloc_sections": [
+      {
+        "name": ".rodata",
+        "bytes": 2520,
+        "type": "SHT_PROGBITS"
+      },
+      {
+        "name": ".llext.rodata.noreloc",
+        "bytes": 4336,
+        "type": "SHT_PROGBITS"
+      },
+      {
+        "name": ".text",
+        "bytes": 67600,
+        "type": "SHT_PROGBITS"
+      },
+      {
+        "name": ".data",
+        "bytes": 84,
+        "type": "SHT_PROGBITS"
+      },
+      {
+        "name": ".bss",
+        "bytes": 58156,
+        "type": "SHT_NOBITS"
+      },
+      {
+        "name": ".exported_sym",
+        "bytes": 8,
+        "type": "SHT_PROGBITS"
+      },
+      {
+        "name": ".init_array",
+        "bytes": 32,
+        "type": "SHT_INIT_ARRAY"
+      },
+      {
+        "name": ".fini_array",
+        "bytes": 24,
+        "type": "SHT_FINI_ARRAY"
+      }
+    ],
+    "static_llext_bytes": 132760,
+    "application_arena_bytes": 262144,
+    "arena_margin_before_dynamic_allocations": 129384,
+    "data_bss_bytes": 58240
+  }
+}

@@ -1,0 +1,21 @@
+[INFO] Stopping app "MicroBlocks UNO Q"
+[INFO] time="2026-10-13T22:27:34Z" level=warning msg="The \"APP_HOME\" variable is not set. Defaulting to a blank string."
+[INFO]  Container microblocks-uno-q-main-1  Stopping
+[INFO]  Container microblocks-uno-q-main-1  Stopped
+[INFO]  Container microblocks-uno-q-microblocks_bridge_edge-1  Stopping
+[INFO]  Container microblocks-uno-q-microblocks_bridge_edge-1  Stopped
+Progress[]: 100%
+[INFO] Starting app "MicroBlocks UNO Q"
+Progress[preparing]: 0%
+[INFO] python provisioning
+Progress[python provisioning]: 0%
+time="2026-10-13T22:27:41Z" level=warning msg="The \"APP_HOME\" variable is not set. Defaulting to a blank string."
+[INFO] python downloading
+[INFO]  Container microblocks-uno-q-microblocks_bridge_edge-1  Created
+[INFO]  Container microblocks-uno-q-main-1  Created
+[INFO]  Container microblocks-uno-q-microblocks_bridge_edge-1  Starting
+[INFO]  Container microblocks-uno-q-microblocks_bridge_edge-1  Started
+[INFO]  Container microblocks-uno-q-main-1  Starting
+[INFO]  Container microblocks-uno-q-main-1  Started
+Progress[]: 100%
+✓ App "MicroBlocks UNO Q" restarted successfully

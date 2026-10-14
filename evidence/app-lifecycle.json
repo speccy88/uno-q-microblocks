@@ -1,0 +1,13 @@
+{
+  "result": "PASS",
+  "app_archive_sha256": "bd48c23228ff3f6d4651b4832a7fb8eac3c3e46656741910086d1f6304bdecc9",
+  "imported_copy_browser_arithmetic": 12,
+  "imported_mcu_uptime_min_ms": 4006684,
+  "mcu_reset_detected": false,
+  "scope": "Physical import/start plus actual browser bytecode execution",
+  "final_app_archive_sha256": "ab9e143bd719829aad4e3b3951f6269a9e01d27665af9fbd5e8f1bd9571bdd35",
+  "final_asset_only_change": "Remove three unused upstream developer-path comments",
+  "final_share_archive_import": {
+    "app_id": "user:microblocks-uno-q-20261014-000752"
+  }
+}

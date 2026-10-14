@@ -1,0 +1,12 @@
+test_bad_checksum_no_commands (__main__.Tests.test_bad_checksum_no_commands) ... ok
+test_failed_install_restores_full_backup (__main__.Tests.test_failed_install_restores_full_backup) ... ok
+test_path_injection_rejected (__main__.Tests.test_path_injection_rejected) ... ok
+test_success_is_application_only (__main__.Tests.test_success_is_application_only) ... ok
+test_truncated_backup_prevents_write (__main__.Tests.test_truncated_backup_prevents_write) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.015s
+
+OK
+Application programmed and readback verified. Start App and check /api/status.
+If methods fail to register immediately after installation, perform the documented single MCU-only restart. Never use that step for browser reconnect or normal App restart.

@@ -1,0 +1,105 @@
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/dataPrims.c:698:46: warning: shifting a negative signed value is undefined [-Wshift-negative-value]
+  698 |                 if (startOffset > stringSize(arg1)) return int2obj(-1); // not found
+      |                                                            ^~~~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/mem.h:129:33: note: expanded from macro 'int2obj'
+  129 | #define int2obj(n) ((OBJ) (((n) << 1) | 1))
+      |                             ~~~ ^
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/dataPrims.c:701:30: warning: shifting a negative signed value is undefined [-Wshift-negative-value]
+  701 |                 if (0 == sought[0]) return int2obj(-1); // empty string
+      |                                            ^~~~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/mem.h:129:33: note: expanded from macro 'int2obj'
+  129 | #define int2obj(n) ((OBJ) (((n) << 1) | 1))
+      |                             ~~~ ^
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/dataPrims.c:703:22: warning: shifting a negative signed value is undefined [-Wshift-negative-value]
+  703 |                 if (!match) return int2obj(-1);
+      |                                    ^~~~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/mem.h:129:33: note: expanded from macro 'int2obj'
+  129 | #define int2obj(n) ((OBJ) (((n) << 1) | 1))
+      |                             ~~~ ^
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/dataPrims.c:713:39: warning: shifting a negative signed value is undefined [-Wshift-negative-value]
+  713 |                 if (startOffset > listCount) return int2obj(-1); // not found
+      |                                                     ^~~~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/mem.h:129:33: note: expanded from macro 'int2obj'
+  129 | #define int2obj(n) ((OBJ) (((n) << 1) | 1))
+      |                             ~~~ ^
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/dataPrims.c:728:10: warning: shifting a negative signed value is undefined [-Wshift-negative-value]
+  728 |                 return int2obj(-1);
+      |                        ^~~~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/mem.h:129:33: note: expanded from macro 'int2obj'
+  129 | #define int2obj(n) ((OBJ) (((n) << 1) | 1))
+      |                             ~~~ ^
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/dataPrims.c:732:40: warning: shifting a negative signed value is undefined [-Wshift-negative-value]
+  732 |                 if (startOffset > targetSize) return int2obj(-1); // not found
+      |                                                      ^~~~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/mem.h:129:33: note: expanded from macro 'int2obj'
+  129 | #define int2obj(n) ((OBJ) (((n) << 1) | 1))
+      |                             ~~~ ^
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/dataPrims.c:748:11: warning: shifting a negative signed value is undefined [-Wshift-negative-value]
+  748 |                         return int2obj(-1);
+      |                                ^~~~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/mem.h:129:33: note: expanded from macro 'int2obj'
+  129 | #define int2obj(n) ((OBJ) (((n) << 1) | 1))
+      |                             ~~~ ^
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/dataPrims.c:765:10: warning: shifting a negative signed value is undefined [-Wshift-negative-value]
+  765 |                 return int2obj(-1);
+      |                        ^~~~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/mem.h:129:33: note: expanded from macro 'int2obj'
+  129 | #define int2obj(n) ((OBJ) (((n) << 1) | 1))
+      |                             ~~~ ^
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/dataPrims.c:767:9: warning: shifting a negative signed value is undefined [-Wshift-negative-value]
+  767 |         return int2obj(-1);
+      |                ^~~~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/mem.h:129:33: note: expanded from macro 'int2obj'
+  129 | #define int2obj(n) ((OBJ) (((n) << 1) | 1))
+      |                             ~~~ ^
+9 warnings generated.
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/mem.c:297:49: warning: format specifies type 'int' but the argument has type '__ptrdiff_t' (aka 'long') [-Wformat]
+  297 |                                 sprintf(s, "%d type: %d words: %d fwd: %d", (next - base), type, wordCount, (int) fwd);
+      |                                             ~~                              ^~~~~~~~~~~~~
+      |                                             %td
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/mem.c:299:41: warning: format specifies type 'int' but the argument has type '__ptrdiff_t' (aka 'long') [-Wformat]
+  299 |                                 sprintf(s, "%d type: %d words: %d", (next - base), type, wordCount);
+      |                                             ~~                      ^~~~~~~~~~~~~
+      |                                             %td
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/mem.c:302:29: warning: format specifies type 'int' but the argument has type '__ptrdiff_t' (aka 'long') [-Wformat]
+  302 |                         sprintf(s, "%d FREE %d", (next - base), wordCount);
+      |                                     ~~           ^~~~~~~~~~~~~
+      |                                     %td
+3 warnings generated.
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/persist.c:764:29: warning: format specifies type 'int' but the argument has type '__ptrdiff_t' (aka 'long') [-Wformat]
+  764 |                         sprintf(s, "bad %d: %x", (p - start), *p);
+      |                                         ~~       ^~~~~~~~~~~
+      |                                         %td
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/persist.c:777:4: warning: format specifies type 'int' but the argument has type '__ptrdiff_t' (aka 'long') [-Wformat]
+  776 |                 sprintf(s, "%d: %x %x %x %x %x %x %x %x %x %x",
+      |                             ~~
+      |                             %td
+  777 |                         (p - start), p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]);
+      |                         ^~~~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/persist.c:1050:4: warning: format specifies type 'unsigned long' but the argument has type 'uint32' (aka 'unsigned int') [-Wformat]
+ 1049 |                 sprintf(s, "Compacted RAM code store (%lu msecs)\n%d bytes used (%d%%) of %d",
+      |                                                       ~~~
+      |                                                       %u
+ 1050 |                         millisecs() - startT,
+      |                         ^~~~~~~~~~~~~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/persist.c:1248:4: warning: format specifies type 'int' but the argument has type '__ptrdiff_t' (aka 'long') [-Wformat]
+ 1247 |                 sprintf(s, "Record at offset %d: %d %d %d %d (%d words)",
+      |                                              ~~
+      |                                              %td
+ 1248 |                         (p - start0),
+      |                         ^~~~~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/persist.c:1303:3: warning: format specifies type 'int' but the argument has type '__ptrdiff_t' (aka 'long') [-Wformat]
+ 1301 |         sprintf(s, "Final: current %d used %d c0 %d c1 %d",
+      |                                            ~~
+      |                                            %td
+ 1302 |                 current,
+ 1303 |                 freeStart - ((0 == current) ? start0 : start1),
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+5 warnings generated.
+<WORKSPACE>/phase5-self-hosted-microblocks/firmware/host/vm_host.c:90:55: warning: implicit conversion from 'unsigned int' to 'uint16' (aka 'unsigned short') changes value from 4294966550 to 64790 [-Wconstant-conversion]
+   90 |  vars[1]=zeroObj;const uint16 busy[]={OP(2,3),OP(8,1),OP(22,-3),0};code(1,busy,4);startTaskForChunk(1);tn=0;
+      |                                      ~                ^~~~~~~~~
+<WORKSPACE>/phase5-self-hosted-microblocks/build/smallvm_unoq/src/vm/interp.h:19:48: note: expanded from macro 'OP'
+   19 | #define OP(opcode, arg) (((unsigned) arg << 8) | (opcode & 0xFF))
+      |                          ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+1 warning generated.

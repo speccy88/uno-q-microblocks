@@ -1,0 +1,34 @@
+{
+  "physical": {
+    "browser_arithmetic": 12,
+    "output_values": 500,
+    "output_order_exact": true,
+    "rgb_observations": 96,
+    "matrix_observations": 64,
+    "matrix_patterns_readback": 5,
+    "disconnected_observations": 99,
+    "disconnected_host_acks": 21,
+    "disconnected_matrix_shows": 29,
+    "spi_cycles": 100,
+    "spi_median_ms": 17.314103999524377,
+    "spi_max_ms": 20.867958024609834,
+    "concurrent_incomplete_vm_counts": 80,
+    "fpga_ping": "C3",
+    "fpga_epoch": 13,
+    "fpga_flash_writes": 0,
+    "application_updates": 2,
+    "loader_writes": 0,
+    "linux_image_writes": 0
+  },
+  "automated": {
+    "interpreter_runs": 35,
+    "server_test_methods": 3,
+    "randomized_server_roundtrips": 1000,
+    "transport_test_methods": 4,
+    "installer_guard_test_methods": 5
+  },
+  "optical_rgb_confirmation": "PASS (physical, owner visual)",
+  "optical_matrix_orientation": "NOT TESTED",
+  "generic_profile_physical_startup": "NOT TESTED",
+  "optical_matrix_patterns": "PASS (physical, owner visual): heart and checkerboard"
+}

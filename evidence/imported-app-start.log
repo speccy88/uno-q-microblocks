@@ -1,0 +1,14 @@
+{"saved": true, "channels": ["1r", "1g", "1b", "2r", "2g", "2b"], "instruction": "Keep data/led_original.json private and persistent. App restarts reuse it."}
+[INFO] Starting app "MicroBlocks UNO Q"
+Progress[preparing]: 0%
+[INFO] python provisioning
+Progress[python provisioning]: 0%
+[INFO] python downloading
+[INFO]  Network microblocks-uno-q-20261013-234411_default  Creating
+[INFO]  Network microblocks-uno-q-20261013-234411_default  Created
+[INFO]  Container microblocks-uno-q-20261013-234411-main-1  Creating
+[INFO]  Container microblocks-uno-q-20261013-234411-main-1  Created
+[INFO]  Container microblocks-uno-q-20261013-234411-main-1  Starting
+[INFO]  Container microblocks-uno-q-20261013-234411-main-1  Started
+Progress[]: 100%
+✓ App "MicroBlocks UNO Q" started successfully

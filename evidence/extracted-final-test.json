@@ -1,0 +1,7 @@
+{
+  "zip_crc": "PASS",
+  "manifest_files": 1257,
+  "extracted_host_test_exit": 0,
+  "stdout": "Prepared minimal SmallVM from canonical source, with explicit patch\n35 actual interpreter tests PASS\n",
+  "stderr": ""
+}

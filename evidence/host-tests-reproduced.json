@@ -1,0 +1,282 @@
+[
+  {
+    "utc": "2026-10-13T23:41:20.248067+00:00",
+    "repeat": 0,
+    "mode": "ide-reset",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"10 IDE reset/delete-all followed by exact captured reporter returns 12\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:20.476698+00:00",
+    "repeat": 0,
+    "mode": "fragmented",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"maximum message at 30 ms inter-RPC gaps executes exactly\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:20.814078+00:00",
+    "repeat": 0,
+    "mode": "truncation",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"partial frame expires and next PING succeeds\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:20.851183+00:00",
+    "repeat": 0,
+    "mode": "backpressure",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"no consumer: bounded explicit session fault, reset and PING recovery\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:20.890634+00:00",
+    "repeat": 0,
+    "mode": "bulk",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"six code replies, stalled consumer then byte-exact resume\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:20.926915+00:00",
+    "repeat": 0,
+    "mode": "hardware",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"scope\":\"real named primitives; simulated GPIO/matrix backend\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:21.066043+00:00",
+    "repeat": 0,
+    "mode": "stress",
+    "exit": 0,
+    "stdout": "{\"kind\":\"Actual SmallVM wasm32 interpreter on Mac, simulated services\",\"sizeof\":{\"OBJ\":4,\"Task\":524,\"tasks\":5240,\"chunks\":2040,\"vars\":512},\"max_IDE_message_bytes\":1019,\"timing_wait_ms\":10,\"arithmetic_variable_result\":12,\"straight_line_budget\":\"PASS\",\"busy_counter\":350164,\"slices\":300000,\"simulated_router_callbacks\":300000,\"simulated_fpga_requests\":17648,\"actual_vm_ping_replies\":301,\"burst_ping_replies\":240,\"max_input_queue_bytes\":24,\"max_slice_us\":650,\"max_ping_us\":16,\"elapsed_us\":84366,\"result\":\"PASS\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:21.107674+00:00",
+    "repeat": 1,
+    "mode": "ide-reset",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"10 IDE reset/delete-all followed by exact captured reporter returns 12\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:21.331520+00:00",
+    "repeat": 1,
+    "mode": "fragmented",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"maximum message at 30 ms inter-RPC gaps executes exactly\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:21.670249+00:00",
+    "repeat": 1,
+    "mode": "truncation",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"partial frame expires and next PING succeeds\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:21.705424+00:00",
+    "repeat": 1,
+    "mode": "backpressure",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"no consumer: bounded explicit session fault, reset and PING recovery\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:21.745794+00:00",
+    "repeat": 1,
+    "mode": "bulk",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"six code replies, stalled consumer then byte-exact resume\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:21.781714+00:00",
+    "repeat": 1,
+    "mode": "hardware",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"scope\":\"real named primitives; simulated GPIO/matrix backend\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:21.929816+00:00",
+    "repeat": 1,
+    "mode": "stress",
+    "exit": 0,
+    "stdout": "{\"kind\":\"Actual SmallVM wasm32 interpreter on Mac, simulated services\",\"sizeof\":{\"OBJ\":4,\"Task\":524,\"tasks\":5240,\"chunks\":2040,\"vars\":512},\"max_IDE_message_bytes\":1019,\"timing_wait_ms\":10,\"arithmetic_variable_result\":12,\"straight_line_budget\":\"PASS\",\"busy_counter\":350164,\"slices\":300000,\"simulated_router_callbacks\":300000,\"simulated_fpga_requests\":17648,\"actual_vm_ping_replies\":301,\"burst_ping_replies\":240,\"max_input_queue_bytes\":24,\"max_slice_us\":2847,\"max_ping_us\":6,\"elapsed_us\":93428,\"result\":\"PASS\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:21.971784+00:00",
+    "repeat": 2,
+    "mode": "ide-reset",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"10 IDE reset/delete-all followed by exact captured reporter returns 12\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:22.197636+00:00",
+    "repeat": 2,
+    "mode": "fragmented",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"maximum message at 30 ms inter-RPC gaps executes exactly\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:22.535500+00:00",
+    "repeat": 2,
+    "mode": "truncation",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"partial frame expires and next PING succeeds\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:22.572206+00:00",
+    "repeat": 2,
+    "mode": "backpressure",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"no consumer: bounded explicit session fault, reset and PING recovery\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:22.613535+00:00",
+    "repeat": 2,
+    "mode": "bulk",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"six code replies, stalled consumer then byte-exact resume\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:22.651771+00:00",
+    "repeat": 2,
+    "mode": "hardware",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"scope\":\"real named primitives; simulated GPIO/matrix backend\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:22.794444+00:00",
+    "repeat": 2,
+    "mode": "stress",
+    "exit": 0,
+    "stdout": "{\"kind\":\"Actual SmallVM wasm32 interpreter on Mac, simulated services\",\"sizeof\":{\"OBJ\":4,\"Task\":524,\"tasks\":5240,\"chunks\":2040,\"vars\":512},\"max_IDE_message_bytes\":1019,\"timing_wait_ms\":10,\"arithmetic_variable_result\":12,\"straight_line_budget\":\"PASS\",\"busy_counter\":350164,\"slices\":300000,\"simulated_router_callbacks\":300000,\"simulated_fpga_requests\":17648,\"actual_vm_ping_replies\":301,\"burst_ping_replies\":240,\"max_input_queue_bytes\":24,\"max_slice_us\":685,\"max_ping_us\":7,\"elapsed_us\":87087,\"result\":\"PASS\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:22.836018+00:00",
+    "repeat": 3,
+    "mode": "ide-reset",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"10 IDE reset/delete-all followed by exact captured reporter returns 12\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:23.060941+00:00",
+    "repeat": 3,
+    "mode": "fragmented",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"maximum message at 30 ms inter-RPC gaps executes exactly\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:23.399052+00:00",
+    "repeat": 3,
+    "mode": "truncation",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"partial frame expires and next PING succeeds\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:23.437290+00:00",
+    "repeat": 3,
+    "mode": "backpressure",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"no consumer: bounded explicit session fault, reset and PING recovery\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:23.474899+00:00",
+    "repeat": 3,
+    "mode": "bulk",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"six code replies, stalled consumer then byte-exact resume\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:23.510856+00:00",
+    "repeat": 3,
+    "mode": "hardware",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"scope\":\"real named primitives; simulated GPIO/matrix backend\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:23.650886+00:00",
+    "repeat": 3,
+    "mode": "stress",
+    "exit": 0,
+    "stdout": "{\"kind\":\"Actual SmallVM wasm32 interpreter on Mac, simulated services\",\"sizeof\":{\"OBJ\":4,\"Task\":524,\"tasks\":5240,\"chunks\":2040,\"vars\":512},\"max_IDE_message_bytes\":1019,\"timing_wait_ms\":10,\"arithmetic_variable_result\":12,\"straight_line_budget\":\"PASS\",\"busy_counter\":350164,\"slices\":300000,\"simulated_router_callbacks\":300000,\"simulated_fpga_requests\":17648,\"actual_vm_ping_replies\":301,\"burst_ping_replies\":240,\"max_input_queue_bytes\":24,\"max_slice_us\":915,\"max_ping_us\":339,\"elapsed_us\":86727,\"result\":\"PASS\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:23.691660+00:00",
+    "repeat": 4,
+    "mode": "ide-reset",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"10 IDE reset/delete-all followed by exact captured reporter returns 12\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:23.916696+00:00",
+    "repeat": 4,
+    "mode": "fragmented",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"maximum message at 30 ms inter-RPC gaps executes exactly\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:24.254402+00:00",
+    "repeat": 4,
+    "mode": "truncation",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"partial frame expires and next PING succeeds\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:24.290618+00:00",
+    "repeat": 4,
+    "mode": "backpressure",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"no consumer: bounded explicit session fault, reset and PING recovery\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:24.326937+00:00",
+    "repeat": 4,
+    "mode": "bulk",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"finding\":\"six code replies, stalled consumer then byte-exact resume\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:24.362097+00:00",
+    "repeat": 4,
+    "mode": "hardware",
+    "exit": 0,
+    "stdout": "{\"result\":\"PASS\",\"scope\":\"real named primitives; simulated GPIO/matrix backend\"}\n",
+    "stderr": ""
+  },
+  {
+    "utc": "2026-10-13T23:41:24.505314+00:00",
+    "repeat": 4,
+    "mode": "stress",
+    "exit": 0,
+    "stdout": "{\"kind\":\"Actual SmallVM wasm32 interpreter on Mac, simulated services\",\"sizeof\":{\"OBJ\":4,\"Task\":524,\"tasks\":5240,\"chunks\":2040,\"vars\":512},\"max_IDE_message_bytes\":1019,\"timing_wait_ms\":10,\"arithmetic_variable_result\":12,\"straight_line_budget\":\"PASS\",\"busy_counter\":350164,\"slices\":300000,\"simulated_router_callbacks\":300000,\"simulated_fpga_requests\":17648,\"actual_vm_ping_replies\":301,\"burst_ping_replies\":240,\"max_input_queue_bytes\":24,\"max_slice_us\":746,\"max_ping_us\":715,\"elapsed_us\":89248,\"result\":\"PASS\"}\n",
+    "stderr": ""
+  }
+]

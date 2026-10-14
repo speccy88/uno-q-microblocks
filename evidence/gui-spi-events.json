@@ -1,0 +1,836 @@
+[
+  {
+    "utc": "2026-10-13T22:56:06.440192+00:00",
+    "event": "monitor_ready",
+    "before": {
+      "pb_uptime": 1003764,
+      "pb_epoch": 13,
+      "pb_errors": 0,
+      "pb_sessions": 0
+    }
+  },
+  {
+    "utc": "2026-10-13T22:56:11.122871+00:00",
+    "event": "spi_router_pass",
+    "cycle": 0,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.60529199964367,
+    "vm_count": 9
+  },
+  {
+    "utc": "2026-10-13T22:56:11.173845+00:00",
+    "event": "spi_router_pass",
+    "cycle": 1,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.783541981363669,
+    "vm_count": 16
+  },
+  {
+    "utc": "2026-10-13T22:56:11.228944+00:00",
+    "event": "spi_router_pass",
+    "cycle": 2,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.117166018579155,
+    "vm_count": 21
+  },
+  {
+    "utc": "2026-10-13T22:56:11.283976+00:00",
+    "event": "spi_router_pass",
+    "cycle": 3,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.701124997576699,
+    "vm_count": 26
+  },
+  {
+    "utc": "2026-10-13T22:56:11.339522+00:00",
+    "event": "spi_router_pass",
+    "cycle": 4,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.048625002847984,
+    "vm_count": 32
+  },
+  {
+    "utc": "2026-10-13T22:56:11.393586+00:00",
+    "event": "spi_router_pass",
+    "cycle": 5,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.82141699711792,
+    "vm_count": 38
+  },
+  {
+    "utc": "2026-10-13T22:56:11.452152+00:00",
+    "event": "spi_router_pass",
+    "cycle": 6,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.258416999131441,
+    "vm_count": 44
+  },
+  {
+    "utc": "2026-10-13T22:56:11.511697+00:00",
+    "event": "spi_router_pass",
+    "cycle": 7,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.892666997388005,
+    "vm_count": 50
+  },
+  {
+    "utc": "2026-10-13T22:56:11.568668+00:00",
+    "event": "spi_router_pass",
+    "cycle": 8,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.864624991081655,
+    "vm_count": 57
+  },
+  {
+    "utc": "2026-10-13T22:56:11.623056+00:00",
+    "event": "spi_router_pass",
+    "cycle": 9,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.21587499580346,
+    "vm_count": 63
+  },
+  {
+    "utc": "2026-10-13T22:56:11.679417+00:00",
+    "event": "spi_router_pass",
+    "cycle": 10,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.2388339813333,
+    "vm_count": 69
+  },
+  {
+    "utc": "2026-10-13T22:56:11.734778+00:00",
+    "event": "spi_router_pass",
+    "cycle": 11,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.552458001067862,
+    "vm_count": 75
+  },
+  {
+    "utc": "2026-10-13T22:56:11.789599+00:00",
+    "event": "spi_router_pass",
+    "cycle": 12,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.46500000404194,
+    "vm_count": 81
+  },
+  {
+    "utc": "2026-10-13T22:56:11.838931+00:00",
+    "event": "spi_router_pass",
+    "cycle": 13,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.499291999731213,
+    "vm_count": 86
+  },
+  {
+    "utc": "2026-10-13T22:56:11.896704+00:00",
+    "event": "spi_router_pass",
+    "cycle": 14,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.108832980738953,
+    "vm_count": 92
+  },
+  {
+    "utc": "2026-10-13T22:56:11.955695+00:00",
+    "event": "spi_router_pass",
+    "cycle": 15,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.905290987575427,
+    "vm_count": 98
+  },
+  {
+    "utc": "2026-10-13T22:56:12.012582+00:00",
+    "event": "spi_router_pass",
+    "cycle": 16,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.056874999776483,
+    "vm_count": 105
+  },
+  {
+    "utc": "2026-10-13T22:56:12.067432+00:00",
+    "event": "spi_router_pass",
+    "cycle": 17,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 19.40520800417289,
+    "vm_count": 111
+  },
+  {
+    "utc": "2026-10-13T22:56:12.124346+00:00",
+    "event": "spi_router_pass",
+    "cycle": 18,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 19.849542004521936,
+    "vm_count": 117
+  },
+  {
+    "utc": "2026-10-13T22:56:12.177941+00:00",
+    "event": "spi_router_pass",
+    "cycle": 19,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.643667000811547,
+    "vm_count": 123
+  },
+  {
+    "utc": "2026-10-13T22:56:12.236463+00:00",
+    "event": "spi_router_pass",
+    "cycle": 20,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 20.249125023838133,
+    "vm_count": 129
+  },
+  {
+    "utc": "2026-10-13T22:56:12.291416+00:00",
+    "event": "spi_router_pass",
+    "cycle": 21,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.329791007796302,
+    "vm_count": 135
+  },
+  {
+    "utc": "2026-10-13T22:56:12.348155+00:00",
+    "event": "spi_router_pass",
+    "cycle": 22,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.999374995473772,
+    "vm_count": 141
+  },
+  {
+    "utc": "2026-10-13T22:56:12.405365+00:00",
+    "event": "spi_router_pass",
+    "cycle": 23,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.967958982102573,
+    "vm_count": 147
+  },
+  {
+    "utc": "2026-10-13T22:56:12.463685+00:00",
+    "event": "spi_router_pass",
+    "cycle": 24,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.52395898802206,
+    "vm_count": 154
+  },
+  {
+    "utc": "2026-10-13T22:56:12.522422+00:00",
+    "event": "spi_router_pass",
+    "cycle": 25,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.744834010954946,
+    "vm_count": 159
+  },
+  {
+    "utc": "2026-10-13T22:56:12.583634+00:00",
+    "event": "spi_router_pass",
+    "cycle": 26,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.96000001882203,
+    "vm_count": 165
+  },
+  {
+    "utc": "2026-10-13T22:56:12.640692+00:00",
+    "event": "spi_router_pass",
+    "cycle": 27,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 19.24074999988079,
+    "vm_count": 172
+  },
+  {
+    "utc": "2026-10-13T22:56:12.700721+00:00",
+    "event": "spi_router_pass",
+    "cycle": 28,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.753541982732713,
+    "vm_count": 178
+  },
+  {
+    "utc": "2026-10-13T22:56:12.764074+00:00",
+    "event": "spi_router_pass",
+    "cycle": 29,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.03791699744761,
+    "vm_count": 184
+  },
+  {
+    "utc": "2026-10-13T22:56:12.820941+00:00",
+    "event": "spi_router_pass",
+    "cycle": 30,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.460208000149578,
+    "vm_count": 191
+  },
+  {
+    "utc": "2026-10-13T22:56:12.874985+00:00",
+    "event": "spi_router_pass",
+    "cycle": 31,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.857415979960933,
+    "vm_count": 197
+  },
+  {
+    "utc": "2026-10-13T22:56:12.932328+00:00",
+    "event": "spi_router_pass",
+    "cycle": 32,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 20.127167023019865,
+    "vm_count": 203
+  },
+  {
+    "utc": "2026-10-13T22:56:12.990897+00:00",
+    "event": "spi_router_pass",
+    "cycle": 33,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.39941699290648,
+    "vm_count": 209
+  },
+  {
+    "utc": "2026-10-13T22:56:13.052142+00:00",
+    "event": "spi_router_pass",
+    "cycle": 34,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.472167026018724,
+    "vm_count": 216
+  },
+  {
+    "utc": "2026-10-13T22:56:13.111006+00:00",
+    "event": "spi_router_pass",
+    "cycle": 35,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.6143750033807,
+    "vm_count": 222
+  },
+  {
+    "utc": "2026-10-13T22:56:13.172555+00:00",
+    "event": "spi_router_pass",
+    "cycle": 36,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.16091702110134,
+    "vm_count": 229
+  },
+  {
+    "utc": "2026-10-13T22:56:13.230125+00:00",
+    "event": "spi_router_pass",
+    "cycle": 37,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.740167000330985,
+    "vm_count": 235
+  },
+  {
+    "utc": "2026-10-13T22:56:13.279771+00:00",
+    "event": "spi_router_pass",
+    "cycle": 38,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.70350001566112,
+    "vm_count": 241
+  },
+  {
+    "utc": "2026-10-13T22:56:13.335696+00:00",
+    "event": "spi_router_pass",
+    "cycle": 39,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 19.766417011851445,
+    "vm_count": 246
+  },
+  {
+    "utc": "2026-10-13T22:56:13.391325+00:00",
+    "event": "spi_router_pass",
+    "cycle": 40,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.76883300044574,
+    "vm_count": 252
+  },
+  {
+    "utc": "2026-10-13T22:56:13.447146+00:00",
+    "event": "spi_router_pass",
+    "cycle": 41,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 19.06866699573584,
+    "vm_count": 258
+  },
+  {
+    "utc": "2026-10-13T22:56:13.502956+00:00",
+    "event": "spi_router_pass",
+    "cycle": 42,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.0001670087222,
+    "vm_count": 264
+  },
+  {
+    "utc": "2026-10-13T22:56:13.562390+00:00",
+    "event": "spi_router_pass",
+    "cycle": 43,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 20.241999998688698,
+    "vm_count": 271
+  },
+  {
+    "utc": "2026-10-13T22:56:13.621347+00:00",
+    "event": "spi_router_pass",
+    "cycle": 44,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.075749987270683,
+    "vm_count": 276
+  },
+  {
+    "utc": "2026-10-13T22:56:13.681490+00:00",
+    "event": "spi_router_pass",
+    "cycle": 45,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.004999983124435,
+    "vm_count": 283
+  },
+  {
+    "utc": "2026-10-13T22:56:13.735462+00:00",
+    "event": "spi_router_pass",
+    "cycle": 46,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 14.702624990604818,
+    "vm_count": 289
+  },
+  {
+    "utc": "2026-10-13T22:56:13.801700+00:00",
+    "event": "spi_router_pass",
+    "cycle": 47,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.53583299089223,
+    "vm_count": 295
+  },
+  {
+    "utc": "2026-10-13T22:56:13.872699+00:00",
+    "event": "spi_router_pass",
+    "cycle": 48,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 19.420666008954868,
+    "vm_count": 303
+  },
+  {
+    "utc": "2026-10-13T22:56:13.941428+00:00",
+    "event": "spi_router_pass",
+    "cycle": 49,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 20.867958024609834,
+    "vm_count": 311
+  },
+  {
+    "utc": "2026-10-13T22:56:13.999854+00:00",
+    "event": "spi_router_pass",
+    "cycle": 50,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.862500004004687,
+    "vm_count": 318
+  },
+  {
+    "utc": "2026-10-13T22:56:14.054801+00:00",
+    "event": "spi_router_pass",
+    "cycle": 51,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.697583000175655,
+    "vm_count": 324
+  },
+  {
+    "utc": "2026-10-13T22:56:14.114246+00:00",
+    "event": "spi_router_pass",
+    "cycle": 52,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.779874993721023,
+    "vm_count": 330
+  },
+  {
+    "utc": "2026-10-13T22:56:14.176153+00:00",
+    "event": "spi_router_pass",
+    "cycle": 53,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.338624991476536,
+    "vm_count": 336
+  },
+  {
+    "utc": "2026-10-13T22:56:14.237472+00:00",
+    "event": "spi_router_pass",
+    "cycle": 54,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.74116697581485,
+    "vm_count": 343
+  },
+  {
+    "utc": "2026-10-13T22:56:14.293322+00:00",
+    "event": "spi_router_pass",
+    "cycle": 55,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.830500000854954,
+    "vm_count": 350
+  },
+  {
+    "utc": "2026-10-13T22:56:14.350770+00:00",
+    "event": "spi_router_pass",
+    "cycle": 56,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.515208000782877,
+    "vm_count": 356
+  },
+  {
+    "utc": "2026-10-13T22:56:14.411124+00:00",
+    "event": "spi_router_pass",
+    "cycle": 57,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.29608401749283,
+    "vm_count": 363
+  },
+  {
+    "utc": "2026-10-13T22:56:14.469455+00:00",
+    "event": "spi_router_pass",
+    "cycle": 58,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 14.858666982036084,
+    "vm_count": 369
+  },
+  {
+    "utc": "2026-10-13T22:56:14.529191+00:00",
+    "event": "spi_router_pass",
+    "cycle": 59,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 19.653249997645617,
+    "vm_count": 376
+  },
+  {
+    "utc": "2026-10-13T22:56:14.586277+00:00",
+    "event": "spi_router_pass",
+    "cycle": 60,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.25666699348949,
+    "vm_count": 381
+  },
+  {
+    "utc": "2026-10-13T22:56:14.635467+00:00",
+    "event": "spi_router_pass",
+    "cycle": 61,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.37508302135393,
+    "vm_count": 387
+  },
+  {
+    "utc": "2026-10-13T22:56:14.691347+00:00",
+    "event": "spi_router_pass",
+    "cycle": 62,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.43383299233392,
+    "vm_count": 393
+  },
+  {
+    "utc": "2026-10-13T22:56:14.751281+00:00",
+    "event": "spi_router_pass",
+    "cycle": 63,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.6378750000149,
+    "vm_count": 399
+  },
+  {
+    "utc": "2026-10-13T22:56:14.809504+00:00",
+    "event": "spi_router_pass",
+    "cycle": 64,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.717375004896894,
+    "vm_count": 406
+  },
+  {
+    "utc": "2026-10-13T22:56:14.869087+00:00",
+    "event": "spi_router_pass",
+    "cycle": 65,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 19.87833302700892,
+    "vm_count": 412
+  },
+  {
+    "utc": "2026-10-13T22:56:14.930965+00:00",
+    "event": "spi_router_pass",
+    "cycle": 66,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.989083000225946,
+    "vm_count": 418
+  },
+  {
+    "utc": "2026-10-13T22:56:14.989283+00:00",
+    "event": "spi_router_pass",
+    "cycle": 67,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.387290998362005,
+    "vm_count": 425
+  },
+  {
+    "utc": "2026-10-13T22:56:15.048118+00:00",
+    "event": "spi_router_pass",
+    "cycle": 68,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.298416991252452,
+    "vm_count": 431
+  },
+  {
+    "utc": "2026-10-13T22:56:15.107212+00:00",
+    "event": "spi_router_pass",
+    "cycle": 69,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.511083009187132,
+    "vm_count": 437
+  },
+  {
+    "utc": "2026-10-13T22:56:15.164250+00:00",
+    "event": "spi_router_pass",
+    "cycle": 70,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.40691702091135,
+    "vm_count": 444
+  },
+  {
+    "utc": "2026-10-13T22:56:15.223332+00:00",
+    "event": "spi_router_pass",
+    "cycle": 71,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.88537498214282,
+    "vm_count": 450
+  },
+  {
+    "utc": "2026-10-13T22:56:15.280307+00:00",
+    "event": "spi_router_pass",
+    "cycle": 72,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.197790984530002,
+    "vm_count": 456
+  },
+  {
+    "utc": "2026-10-13T22:56:15.329980+00:00",
+    "event": "spi_router_pass",
+    "cycle": 73,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.449624974280596,
+    "vm_count": 462
+  },
+  {
+    "utc": "2026-10-13T22:56:15.389511+00:00",
+    "event": "spi_router_pass",
+    "cycle": 74,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.58520901785232,
+    "vm_count": 467
+  },
+  {
+    "utc": "2026-10-13T22:56:15.444739+00:00",
+    "event": "spi_router_pass",
+    "cycle": 75,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.815250001149252,
+    "vm_count": 473
+  },
+  {
+    "utc": "2026-10-13T22:56:15.507074+00:00",
+    "event": "spi_router_pass",
+    "cycle": 76,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 20.770124974660575,
+    "vm_count": 480
+  },
+  {
+    "utc": "2026-10-13T22:56:15.565711+00:00",
+    "event": "spi_router_pass",
+    "cycle": 77,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.637790987966582,
+    "vm_count": 486
+  },
+  {
+    "utc": "2026-10-13T22:56:15.613826+00:00",
+    "event": "spi_router_pass",
+    "cycle": 78,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 14.987125003244728,
+    "vm_count": 492
+  },
+  {
+    "utc": "2026-10-13T22:56:15.668954+00:00",
+    "event": "spi_router_pass",
+    "cycle": 79,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.461500003468245,
+    "vm_count": 498
+  },
+  {
+    "utc": "2026-10-13T22:56:15.727242+00:00",
+    "event": "spi_router_pass",
+    "cycle": 80,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 19.11645900690928,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:15.781563+00:00",
+    "event": "spi_router_pass",
+    "cycle": 81,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.439332994399592,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:15.839384+00:00",
+    "event": "spi_router_pass",
+    "cycle": 82,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.255709001095966,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:15.896257+00:00",
+    "event": "spi_router_pass",
+    "cycle": 83,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.366375017445534,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:15.951753+00:00",
+    "event": "spi_router_pass",
+    "cycle": 84,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.59045898122713,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.011660+00:00",
+    "event": "spi_router_pass",
+    "cycle": 85,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 20.369958016090095,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.065611+00:00",
+    "event": "spi_router_pass",
+    "cycle": 86,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.990707983495668,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.116542+00:00",
+    "event": "spi_router_pass",
+    "cycle": 87,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.944207989377901,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.172443+00:00",
+    "event": "spi_router_pass",
+    "cycle": 88,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.840832988033071,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.226742+00:00",
+    "event": "spi_router_pass",
+    "cycle": 89,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.469749989686534,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.281590+00:00",
+    "event": "spi_router_pass",
+    "cycle": 90,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.37062500230968,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.333184+00:00",
+    "event": "spi_router_pass",
+    "cycle": 91,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.49141701636836,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.385440+00:00",
+    "event": "spi_router_pass",
+    "cycle": 92,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 15.863041015109047,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.435975+00:00",
+    "event": "spi_router_pass",
+    "cycle": 93,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.33750000130385,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.494967+00:00",
+    "event": "spi_router_pass",
+    "cycle": 94,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.858000017236918,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.551066+00:00",
+    "event": "spi_router_pass",
+    "cycle": 95,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 16.506957996170968,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.605715+00:00",
+    "event": "spi_router_pass",
+    "cycle": 96,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.002500011585653,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.661199+00:00",
+    "event": "spi_router_pass",
+    "cycle": 97,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.049042013240978,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.717903+00:00",
+    "event": "spi_router_pass",
+    "cycle": 98,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 17.43237502523698,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.777768+00:00",
+    "event": "spi_router_pass",
+    "cycle": 99,
+    "ping_hex": "c3",
+    "spi_rpc_ms": 18.318957998417318,
+    "vm_count": 500
+  },
+  {
+    "utc": "2026-10-13T22:56:16.836511+00:00",
+    "event": "gui_spi_monitor_pass",
+    "cycles": 100,
+    "vm_iterations": 500,
+    "observed_incomplete_vm_counts": 80,
+    "count_min": 9,
+    "count_max": 500,
+    "spi_median_ms": 17.314103999524377,
+    "spi_max_ms": 20.867958024609834,
+    "before": {
+      "pb_uptime": 1003764,
+      "pb_epoch": 13,
+      "pb_errors": 0,
+      "pb_sessions": 0
+    },
+    "after": {
+      "pb_uptime": 1014151,
+      "pb_epoch": 13,
+      "pb_errors": 0,
+      "pb_sessions": 0
+    },
+    "linux_boot_id": "<REDACTED>"
+  }
+]

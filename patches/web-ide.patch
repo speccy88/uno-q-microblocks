@@ -1,0 +1,43 @@
+--- a/ide/MicroBlocksAPI.gp
++++ b/ide/MicroBlocksAPI.gp
+@@ -61,6 +61,19 @@
+ 		respondAPIRequest this id 0 // respond first so the request is deleted
+ 		spinner = (partThatIs (morph (global 'page')) 'MicroBlocksSpinner')
+ 		if (notNil spinner) { destroy spinner }
++
++	// UNO Q: local, pinned files imported through the original editor/compiler.
++	} (endPoint == 'unoq.loadLibrary') {
++		respondAPIRequest this id 0
++		data = (readEmbeddedFile 'Libraries/UNO_Q_Hardware.ubl')
++		if (notNil data) { importLibraryFromString scripter data 'UNO Q Hardware' '' }
++	} (endPoint == 'unoq.openExample') {
++		respondAPIRequest this id 0
++		name = (at params 1)
++		if (isOneOf name 'arithmetic' 'output' 'rgb' 'matrix' 'combined') {
++			data = (readEmbeddedFile (join 'Examples/UNO Q/' name '.ubp'))
++			if (notNil data) { openProject editor data (join name '.ubp') }
++		}
+ 
+ 	// Project
+ 	} (endPoint == 'project.save') {
+--- a/ide/MicroBlocksCompiler.gp
++++ b/ide/MicroBlocksCompiler.gp
+@@ -610,6 +610,7 @@
+ 		atPut primsets primSetName primSetIndex
+ 		primSetIndex += 1
+ 	}
++	atPut primsets 'unoq' (at primsets 'io')
+ }
+ 
+ // instruction generation: entry point
+--- a/ide/MicroBlocksEditor.gp
++++ b/ide/MicroBlocksEditor.gp
+@@ -388,7 +388,7 @@
+ 
+ 	if (not (busy (smallRuntime))) { processMessages (smallRuntime) }
+ 	if ('unknown' == newerVersion) {
+-		launch (global 'page') (newCommand 'checkLatestVersion' this) // start version check
++		// UNO Q pinned offline edition: no remote version request
+ 		newerVersion = nil
+ 	} (notNil newerVersion) {
+ 		if versionCheckOnStartup {

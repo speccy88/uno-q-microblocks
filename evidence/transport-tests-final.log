@@ -1,0 +1,9 @@
+test_ambiguous_push_no_retry (__main__.Tests.test_ambiguous_push_no_retry) ... ok
+test_bounds (__main__.Tests.test_bounds) ... ok
+test_exact_chunks_and_exclusive (__main__.Tests.test_exact_chunks_and_exclusive) ... ok
+test_idle_draining (__main__.Tests.test_idle_draining) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.442s
+
+OK

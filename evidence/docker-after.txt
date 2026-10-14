@@ -1,0 +1,6 @@
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          6         2         2.911GB   1.568GB (53%)
+Containers      2         2         23.38kB   0B (0%)
+Local Volumes   2         0         40.61MB   40.61MB (100%)
+Build Cache     0         0         0B        0B
+node_red_status=running health=healthy

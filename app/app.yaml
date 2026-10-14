@@ -1,0 +1,6 @@
+name: MicroBlocks UNO Q
+description: Official offline MicroBlocks IDE for resident STM32 SmallVM and onboard hardware
+icon: "🧩"
+ports: []
+bricks:
+  - microblocks_bridge: {}

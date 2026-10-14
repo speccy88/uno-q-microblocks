@@ -1,0 +1,19 @@
+{'1r': {'brightness': 0, 'trigger': 'none'}, '1g': {'brightness': 0, 'trigger': 'none'}, '1b': {'brightness': 0, 'trigger': 'none'}, '2r': {'brightness': 0, 'trigger': 'none'}, '2g': {'brightness': 0, 'trigger': 'phy0tx'}, '2b': {'brightness': 1, 'trigger': 'bluetooth-power'}}
+[INFO] Starting app "MicroBlocks UNO Q"
+Progress[preparing]: 0%
+[INFO] python provisioning
+Progress[python provisioning]: 0%
+time="2026-10-13T22:14:20Z" level=warning msg="The \"APP_HOME\" variable is not set. Defaulting to a blank string."
+[INFO] python downloading
+[INFO]  Network microblocks-uno-q_default  Creating
+[INFO]  Network microblocks-uno-q_default  Created
+[INFO]  Container microblocks-uno-q-microblocks_bridge_edge-1  Creating
+[INFO]  Container microblocks-uno-q-microblocks_bridge_edge-1  Created
+[INFO]  Container microblocks-uno-q-main-1  Creating
+[INFO]  Container microblocks-uno-q-main-1  Created
+[INFO]  Container microblocks-uno-q-microblocks_bridge_edge-1  Starting
+[INFO]  Container microblocks-uno-q-microblocks_bridge_edge-1  Started
+[INFO]  Container microblocks-uno-q-main-1  Starting
+[INFO]  Container microblocks-uno-q-main-1  Started
+Progress[]: 100%
+✓ App "MicroBlocks UNO Q" started successfully

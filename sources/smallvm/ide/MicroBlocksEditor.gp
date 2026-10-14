@@ -1,0 +1,1316 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+// Copyright 2019 John Maloney, Bernat Romagosa, and Jens Mönig
+
+// MicroBlocksEditor.gp - Top-level window for the MicroBlocks IDE
+// John Maloney, January, 2018
+
+to isMicroBlocks { return true }
+
+to startup { openMicroBlocksEditor } // run at startup if not in interactive mode
+
+to uload fileName {
+	// Reload a top level module file when working on MicroBlocks. The 'lib/' prefix and '.gp'
+	// suffix can be omitted. Example: "reload 'List'"
+
+	if (not (endsWith fileName '.gp')) { fileName = (join fileName '.gp') }
+	if (contains (listFiles '../ide') fileName) {
+		fileName = (join '../ide/' fileName)
+	} (contains (listFiles 'ide') fileName) {
+		fileName = (join 'ide/' fileName)
+	} else {
+		fileName = (join '../gp/runtime/lib/' fileName)
+	}
+	return (load fileName (topLevelModule))
+}
+
+defineClass MicroBlocksEditor morph fileName scripter leftItems title rightItems tipBar lastProjectFolder lastScriptPicFolder boardLibAutoLoadDisabled autoDecompile showHiddenBlocks frameRate frameCount lastFrameTime newerVersion putNextDroppedFileOnBoard isDownloading isPilot darkMode versionCheckOnStartup
+
+method fileName MicroBlocksEditor { return fileName }
+method project MicroBlocksEditor { return (project scripter) }
+method scripter MicroBlocksEditor { return scripter }
+method lastScriptPicFolder MicroBlocksEditor { return lastScriptPicFolder }
+method setLastScriptPicFolder MicroBlocksEditor dir { lastScriptPicFolder = dir }
+
+to openMicroBlocksEditor devMode {
+	if (and ('Browser' == (platform)) (endsWith (browserURL) 'test.html')) {
+		print 'GP runtime only (no window)'
+
+		setGlobal 'smallRuntime' (initialize (new 'SmallRuntime') (new 'PseudoScriptor'))
+
+		// This forever loop is runs GP API commands from Javascript when Morphic is not running.
+		animate {
+			gcIfNeeded
+			processLastCall (api (smallRuntime))
+			waitMSecs 10 // return control to the browser until next animation frame
+		}
+	}
+
+	if (isNil devMode) { devMode = false }
+	browserSize = (browserSize)
+	page = (newPage (first browserSize) (last browserSize))
+	setDevMode page devMode
+	toggleMorphicMenu (hand page) (contains (commandLine) '--allowMorphMenu')
+	setGlobal 'page' page
+	tryRetina = true
+	open page tryRetina 'MicroBlocks'
+	editor = (initialize (new 'MicroBlocksEditor') (emptyProject))
+	addPart page editor
+	redrawAll (global 'page')
+	readVersionFile (smallRuntime)
+	applyUserPreferences editor
+	developerModeChanged editor
+	url = (browserURL)
+	langCode = (urlParameter url 'lang')
+	if (notNil langCode) { setLanguage editor langCode }
+	// attempt to open a project or scripts from URL; does nothing if absent
+	importFromURL editor url
+	notify (api (smallRuntime)) 'ready'
+	startSteppingSafely page
+}
+
+to findMicroBlocksEditor {
+	page = (global 'page')
+	if (notNil page) {
+		for p (parts (morph page)) {
+			if (isClass (handler p) 'MicroBlocksEditor') { return (handler p) }
+		}
+	}
+	return nil
+}
+
+method initialize MicroBlocksEditor {
+	scale = (global 'scale')
+	morph = (newMorph this)
+	scripter = (initialize (new 'MicroBlocksScripter') this)
+	lastProjectFolder = 'Examples'
+	addPart morph (morph scripter)
+	addTipBar this
+	clearProject this true
+	fixLayout this
+	setFPS morph 200
+	newerVersion = 'unknown'
+	putNextDroppedFileOnBoard = false
+	return this
+}
+
+method scaleChanged MicroBlocksEditor {
+	// Called when the window resolution changes.
+
+	removeHint (global 'page')
+	removeAllParts morph
+
+	// save the state of the current scripter
+	if (2 == (global 'scale')) { oldScale = 1 } else { oldScale = 2 }
+	saveScripts scripter (oldScale * (global 'blockScale')) true
+	oldProject = (project scripter)
+	oldCategory = (currentCategory scripter)
+	oldLibrary = (currentLibrary scripter)
+
+	// make a new scripter and restore old scripter state
+	scripter = (initialize (new 'MicroBlocksScripter') this)
+	setProject scripter oldProject
+	updateLibraryList scripter
+	if (notNil oldCategory) { selectCategory scripter oldCategory }
+	if (notNil oldLibrary) { selectLibrary scripter oldLibrary }
+	languageChanged scripter
+	sendStopAll (smallRuntime)
+	initialize (smallRuntime) scripter
+
+	// rebuild the editor
+	addPart morph (morph scripter)
+	addTipBar this
+
+	fixLayout scripter
+	fixLayout this
+}
+
+// zoom buttons
+
+// we need to keep these for the Graph window, until it's rewritten in HTML
+method newZoomButton MicroBlocksEditor iconName action {
+	if (isNil action) { // use the selector name as the action
+		action = (action iconName this)
+	}
+	iconScale = (1.33 * (global 'scale'))
+	normalColor = (microBlocksColor 'blueGray' 400)
+	highlightColor = (microBlocksColor 'yellow')
+	button = (newButton '' action)
+	bm1 = (readSVGIcon iconName normalColor nil iconScale)
+	bm2 = (readSVGIcon iconName highlightColor nil iconScale)
+	setCostumes button bm1 bm2
+	return button
+}
+
+method restoreZoom MicroBlocksEditor {
+	normalPercent = 100
+	if (isMobile) { normalPercent = 125 }
+	setBlockScalePercent this normalPercent
+}
+
+method zoomIn MicroBlocksEditor {
+	zoomLevels = (list 50 75 100 125 150 200 250)
+	currentZoom = ((global 'blockScale') * 100)
+	for percent zoomLevels {
+		if (percent > currentZoom) { // first entry greater than current zoom level
+			setBlockScalePercent this percent
+			return
+		}
+	}
+}
+
+method zoomOut MicroBlocksEditor {
+	zoomLevels = (list 50 75 100 125 150 200 250)
+	currentZoom = ((global 'blockScale') * 100)
+	for percent (reversed zoomLevels) {
+		if (percent < currentZoom) { // first entry less than current zoom level
+			setBlockScalePercent this percent
+			return
+		}
+	}
+}
+
+method setBlockScalePercent MicroBlocksEditor newPercent {
+	setCursor 'wait'
+	// invalidate SVG cache
+	setGlobal 'svgCache' (dictionary)
+	setBlockScalePercent (scriptEditor scripter) newPercent
+	syncScripts (smallRuntime)
+	setCursor 'default'
+}
+
+// tip bar
+
+method addTipBar MicroBlocksEditor {
+	tipBar = (initialize (new 'MicroBlocksTipBar'))
+	setGlobal 'tipBar' tipBar
+	addPart morph (morph tipBar)
+}
+
+// project operations
+
+method downloadInProgress MicroBlocksEditor {
+	if isDownloading {
+		existingPrompt = (findMorph 'Prompter')
+		if (notNil existingPrompt) { cancel (handler existingPrompt) }
+		inform 'Downloading code to board. Please wait.' nil nil true
+	}
+	return isDownloading
+}
+
+method canReplaceCurrentProject MicroBlocksEditor {
+	if (downloadInProgress this) {return false }
+	return (or
+		(not (hasUserCode (project scripter)))
+		(confirm (global 'page') nil 'Discard current project?'))
+}
+
+method newProject MicroBlocksEditor {
+	if (not (canReplaceCurrentProject this)) { return }
+	clearProject this
+	installBoardSpecificBlocks (smallRuntime)
+	updateLibraryList scripter
+	fileName = ''
+	updateTitle this
+	selectCategory scripter 'cat;Output'
+}
+
+method clearProject MicroBlocksEditor fromInitialize {
+	// Remove old project morphs and classes and reset global state.
+
+	closeAllDialogs this
+	fileName = ''
+	updateTitle this
+	createEmptyProject scripter fromInitialize
+	clearLoggedData (smallRuntime)
+	setProperty (api (smallRuntime)) 'project.hasCustomBlocks' false
+
+	// close graph window
+	graph = (findMorph 'MicroBlocksDataGraph')
+	if (notNil graph) { destroy graph }
+}
+
+method closeAllDialogs MicroBlocksEditor {
+	pageM = (morph (global 'page'))
+	for p (copy (parts pageM)) {
+		// remove explorers, table views -- everything but the MicroBlocksEditor
+		if (p != morph) { removePart pageM p }
+	}
+	doOneCycle (global 'page') // force redisplay
+}
+
+method openProjectMenu MicroBlocksEditor {
+	if (downloadInProgress this) {return }
+
+	fp = (findMorph 'MicroBlocksFilePicker')
+	if (notNil fp) { destroy fp }
+	pickFileToOpen (action 'openProjectFromFile' this) lastProjectFolder (array '.ubp' '.gpp')
+}
+
+method openProjectFromFile MicroBlocksEditor location {
+	// Open a project with the given file path or URL.
+	if (beginsWith location '//') {
+		lastProjectFolder = 'Examples'
+	} else {
+		lastProjectFolder = (directoryPart location)
+	}
+
+	if (not (canReplaceCurrentProject this)) { return }
+	clearProject this
+
+	if (beginsWith location '//') {
+		data = (readEmbeddedFile (substring location 3) true)
+	} else {
+		data = (readFile location true)
+	}
+	if (isNil data) {
+		error (join (localized 'Could not read: ') location)
+	}
+	openProject this data location
+}
+
+method openProject MicroBlocksEditor projectData projectName updateLibraries {
+	if (downloadInProgress this) { return }
+	fileName = projectName
+	updateTitle this
+	if (endsWith projectName '.gpp') {
+		// read old project
+		mainClass = nil
+		proj = (readProject (emptyProject) projectData)
+		if ((count (classes (module proj))) > 0) {
+			mainClass = (first (classes (module proj)))
+		}
+		loadOldProjectFromClass scripter mainClass (blockSpecs proj)
+	} else {
+		loadNewProjectFromData scripter (toString projectData) updateLibraries
+	}
+	// make the opened project an undo state, so undo and redo can return to it
+	storeUndoState scripter
+	// store whether the project has any custom blocks. For project menu purposes.
+	setProperty (api (smallRuntime)) 'project.hasCustomBlocks' ((count (functions (main (project scripter)))) > 0)
+	updateLibraryList scripter
+	developerModeChanged scripter
+	saveAllChunksAfterLoad (smallRuntime)
+	reportFunctionsInSeveralLibraries scripter
+}
+
+method openFromBoard MicroBlocksEditor {
+	if (not (canReplaceCurrentProject this)) { return }
+	clearProject this
+	fileName = ''
+	updateTitle this
+	updateLibraryList scripter
+	readCodeFromNextBoardConnected (smallRuntime)
+}
+
+method saveProjectToFile MicroBlocksEditor {
+	fp = (findMorph 'MicroBlocksFilePicker')
+	if (notNil fp) { destroy fp }
+	saveProject this nil
+}
+
+method urlPrefix MicroBlocksEditor {
+	url = (browserURL)
+	i = (findSubstring '.html' url)
+	if (notNil i) {
+		return (substring url 1 (i + 4))
+	}
+}
+
+method copyProjectURLToClipboard MicroBlocksEditor {
+	// Copy a URL encoding of this project to the clipboard.
+
+	saveScripts scripter nil true
+	codeString = (codeString (project scripter))
+	if (notNil title) {
+		codeString = (join 'projectName ''' title '''' (newline) (newline) codeString)
+	}
+	setClipboard (join (urlPrefix this) '?project='(urlEncode codeString true))
+}
+
+method saveProject MicroBlocksEditor fName {
+	saveScripts scripter nil true
+
+	if (and (isNil fName) (notNil fileName)) {
+		fName = fileName
+		if (beginsWith fName '//Examples') {
+			// if an example was opened, do a "save as" into the Microblocks folder
+			fName = (join (gpFolder) '/' (filePart fileName))
+		}
+	}
+
+	if (or (isNil fName) ('' == fName)) { fName = 'Untitled' }
+	i = (findLast fName '/')
+	if (notNil i) { fName = (substring fName (i + 1)) }
+	if (not (endsWith fName '.ubp')) { fName = (join fName '.ubp') }
+	browserWriteFile (codeString (project scripter)) fName 'project'
+	return
+}
+
+method canWriteProject MicroBlocksEditor fName {
+	return (or
+		(isNil (readFile fName))
+		(confirm (global 'page') nil 'Overwrite project?')
+	)
+}
+
+method isAbsolutePath MicroBlocksEditor fName {
+	// Return true if this string is an absolute file path.
+	// Probably not needed anymore in the browser
+	return false
+}
+
+// board control buttons
+
+method connectToBoard MicroBlocksEditor { selectPort (smallRuntime) }
+method stopAndSyncScripts MicroBlocksEditor { stopAndSyncScripts (smallRuntime) }
+method startAll MicroBlocksEditor { startAll (smallRuntime) }
+
+// project title
+
+method updateTitle MicroBlocksEditor {
+	title = (withoutExtension (filePart fileName))
+	setProperty (api (smallRuntime)) 'project.title' title
+}
+
+method updateIndicator MicroBlocksEditor {
+	setProperty (api (smallRuntime)) 'board.connected' ((updateConnection (smallRuntime)) == 'connected')
+}
+
+// stepping
+
+method step MicroBlocksEditor {
+	processBrowserDroppedFile this
+	processBrowserFileSave this
+	processDroppedFiles this
+
+	if (not (busy (smallRuntime))) { processMessages (smallRuntime) }
+	if ('unknown' == newerVersion) {
+		// UNO Q pinned offline edition: no remote version request
+		newerVersion = nil
+	} (notNil newerVersion) {
+		if versionCheckOnStartup {
+			reportNewerVersion this
+			newerVersion = nil
+		}
+	}
+	if (notNil frameRate) {
+		updateFPS this
+	}
+}
+
+method updateFPS MicroBlocksEditor {
+	if (isNil lastFrameTime) { lastFrameTime = 0 }
+	if (isNil frameCount) { frameCount = 0 }
+	if (frameCount > 5) {
+		now = (msecsSinceStart)
+		frameMSecs = (now - lastFrameTime)
+		msecsPerFrame = (round ((frameCount * 1000) / frameMSecs))
+		setText frameRate (join '' msecsPerFrame ' fps')
+		frameCount = 1
+		lastFrameTime = now
+	} else {
+		frameCount += 1
+	}
+}
+
+// browser support
+
+method browserResize MicroBlocksEditor newWidth newHeight {
+//	openWindow newWidth newHeight true
+	oldScale = (global 'scale')
+	page = (global 'page')
+	updateScale page
+	scale = (global 'scale')
+	pageM = (morph page)
+	setExtent pageM (* newWidth scale) (* newHeight scale)
+
+	for each (parts pageM) { pageResized (handler each) }
+	if ((global 'scale') != oldScale) {
+		for m (allMorphs pageM) { scaleChanged (handler m) }
+	}
+	fixLayout this
+}
+
+method putNextDroppedFileOnBoard MicroBlocksEditor {
+	putNextDroppedFileOnBoard = true
+}
+
+method processBrowserDroppedFile MicroBlocksEditor {
+	pair = (browserGetDroppedFile)
+	if (isNil pair) { return }
+	fName = (callWith 'string' (first pair))
+	data = (last pair)
+	if putNextDroppedFileOnBoard {
+		putNextDroppedFileOnBoard = false // clear flag
+		writeFileToBoard (smallRuntime) fName data
+	} else {
+		processDroppedFile this fName data
+	}
+}
+
+method processBrowserFileSave MicroBlocksEditor {
+	lastSavedName = (browserLastSaveName)
+	if (notNil lastSavedName) {
+		if (endsWith lastSavedName '.ubp') {
+			// Update the title (note: updateTitle will remove the extension)
+			fileName = lastSavedName
+			updateTitle this
+		}
+	}
+}
+
+// dropped files
+
+method processDroppedFiles MicroBlocksEditor {
+	for evt (droppedFiles (global 'page')) {
+		fName = (toUnixPath (at evt 'file'))
+		data = (readFile fName true)
+		if (notNil data) {
+			processDroppedFile this fName data
+		}
+	}
+	for evt (droppedTexts (global 'page')) {
+		text = (at evt 'file')
+		processDroppedText this text
+	}
+}
+
+method processDroppedFile MicroBlocksEditor fName data {
+	lcFilename = (toLowerCase fName)
+	if (or (endsWith lcFilename '.ubp') (endsWith lcFilename '.ubp.txt')) {
+		if (not (canReplaceCurrentProject this)) { return }
+		openProject this data fName
+	} (endsWith lcFilename '.ubl') {
+		importLibraryFromFile scripter fName data
+	} (endsWith lcFilename '.csv') {
+		if (isNil data) { return } // could not read file
+		data = (joinStrings (splitWith (toString data) ',')) // remove commas
+		clearLoggedData (smallRuntime)
+		for entry (lines data) { addLoggedData (smallRuntime) entry }
+	} (endsWith lcFilename '.png') {
+		importFromPNG this data
+	} (endsWith lcFilename '.bin') {
+		// install ESP firmware file
+		if (isNil data) { return } // could not read file
+		installESPFirmwareFromFile (new 'MicroBlocksFirmwareInstaller') fName data
+	} (endsWith lcFilename '.po') {
+		if (notNil data) {
+			installTranslation (authoringSpecs) (toString data)
+			languageChanged this
+		}
+	} (endsWith lcFilename '.gp') {
+		// xxx for testing:
+		eval (toString data) nil (topLevelModule)
+	} else {
+		// load file into board, if possible
+		sendFileData (smallRuntime) fName data
+	}
+}
+
+method processDroppedText MicroBlocksEditor text {
+	if (beginsWith text 'http') {
+		text = (first (lines text))
+		url = (substring text ((findFirst text ':') + 3))
+		host = (substring url 1 ((findFirst url '/') - 1))
+		path = (substring url (findFirst url '/'))
+		fileName = (substring path ((findLast path '/') + 1))
+		if (notNil (findLast fileName '.')) {
+			fileName = (substring fileName 1 ((findLast path '.') - 1))
+		}
+
+		if (or ((findSubstring 'scripts=' url) > 0) ((findSubstring 'project=' url) > 0)) {
+			importFromURL this url
+			return
+		}
+
+		if (endsWith url '.ubp') {
+			if (not (canReplaceCurrentProject this)) { return }
+			openProject this (httpBody (httpGet host path)) fileName
+		} (endsWith url '.ubl') {
+			importLibraryFromString scripter (httpBody (httpGet host path)) fileName fileName
+			saveAllChunksAfterLoad (smallRuntime)
+		} (or (notNil json) (endsWith url '.png')) {
+			data = (httpBody (basicHTTPGetBinary host path))
+			if ('' == data) { return }
+			importFromPNG this data
+		}
+	} else {
+		spec = (specForOp (authoringSpecs) 'comment')
+		block = (blockForSpec spec)
+		setContents (first (inputs block)) text
+		// doesn't work because hand position isn't updated until the drop is done
+		setLeft (morph block) (x (hand (global 'page')))
+		setTop (morph block) (y (hand (global 'page')))
+		addPart (morph (scriptEditor scripter)) (morph block)
+	}
+}
+
+method importFromURL MicroBlocksEditor url {
+	scripts = (urlParameter url 'scripts')
+	if (notNil scripts) { // import scripts embedded in URL
+		scriptString = (urlDecode scripts)
+		pasteScripts scripter scriptString
+		return
+	}
+	proj = (urlParameter url 'project')
+	if (not (canReplaceCurrentProject this)) { return }
+	if (notNil proj) { // open a complete project
+		if (beginsWith proj 'http') {
+			// proj is a project link
+			projectString = (toString (httpBody (httpGetInBrowser proj)))
+			projName = (substring proj ((findLast proj '/') + 1) ((findLast proj '.') - 1))
+		} else {
+			// proj is a project embedded in the URL
+			projectString = (urlDecode proj)
+			projName = (extractProjectName this projectString)
+		}
+		openProject this projectString projName
+		return
+	}
+}
+
+method extractProjectName MicroBlocksEditor projectString {
+	for line (lines projectString) {
+		if (beginsWith line 'projectName') {
+			return (first (argList (first (parse line))))
+		}
+	}
+	return '' // no name found
+}
+
+method importFromPNG MicroBlocksEditor pngData {
+	scriptString = (getScriptText (new 'PNGReader') pngData)
+	if (isNil scriptString) { return } // no script in this PNG file
+	i = (find (letters scriptString) (newline))
+	scriptString = (substring scriptString i)
+	pasteScripts scripter scriptString
+}
+
+// handle drops
+
+method wantsDropOf MicroBlocksEditor aHandler { return true }
+
+method justReceivedDrop MicroBlocksEditor aHandler {
+	if (or (isAnyClass aHandler 'ColorPicker' 'Monitor') (hasField aHandler 'window')) {
+		addPart (morph (global 'page')) (morph aHandler)
+	} else {
+		animateBackToOldOwner (hand (global 'page')) (morph aHandler)
+	}
+}
+
+// version check
+
+method isPilot MicroBlocksEditor { return (true == isPilot) }
+
+method checkLatestVersion MicroBlocksEditor {
+	os = (electronOS (api (smallRuntime)))
+	latestVersion = (fetchLatestVersionNumber this) // fetch version, even in browser, to log usage
+
+	if ('web' == os) {
+		// skip version check in browser/Chromebook but set isPilot based on URL
+		isPilot = (or
+			(notNil (findSubstring 'run-pilot' (browserURL)))
+			(notNil (findSubstring ':8000'  (browserURL))))
+		return
+	}
+
+	isPilot = (or
+		(isPilot this)
+		(endsWith (ideVersionNumber (smallRuntime)) 'pilot')
+	)
+
+	currentVersion = (splitWith (ideVersionNumber (smallRuntime)) '.')
+
+	// sanity checks -- both versions should be lists/arrays of strings representing integers
+	// can get garbage if the HTTP request fails
+	for n latestVersion { if (not (representsAnInteger n)) { return }}
+	for n currentVersion { if (not (representsAnInteger n)) { return }}
+
+	for i (count latestVersion) {
+		latest = (toInteger (at latestVersion i))
+		current = (toInteger (at currentVersion i))
+		isPilot = (or (isPilot this) (current > latest))
+		if isPilot {
+			// we're running a pilot release, lets check the latest one
+			if (isNil latestPilotVersionNumber) {
+				// retrieve the pilot version
+				latestPilotVersionNumber = (fetchLatestPilotVersionNumber this)
+				for n latestPilotVersionNumber { if (not (representsAnInteger n)) { return }} // sanity check
+			}
+			latestVersion = latestPilotVersionNumber
+			latest = (toInteger (at latestPilotVersionNumber i))
+		}
+		if (latest > current) {
+			newerVersion = latestVersion
+		} (current > latest) {
+			// if this subpart of the current version number is > latest, don't check following parts
+			// (e.g. 2.0.0 is later than 1.9.9)
+			// additionally, we've just found out we're on a pilot release
+			return
+		}
+	}
+}
+
+method fetchLatestVersionNumber MicroBlocksEditor {
+	os = (electronOS (api (smallRuntime)))
+	if ('web' == os) {
+		if (browserIsChromeOS) {
+			suffix = '?C='
+		} else {
+			suffix = '?B='
+		}
+	} ('mac' == os) {
+		suffix = '?M='
+	} ('linux' == os) {
+		suffix = '?L='
+	} ('windows' == os) {
+		suffix = '?W='
+	} else {
+		suffix = '?R='
+	}
+	url = (join '/downloads/latest/VERSION.txt' suffix (rand 100000 999999))
+	retries = 5
+	versionText = ''
+	while (and (retries > 0) (isEmpty versionText)) {
+		versionText = (basicHTTPGet 'microblocks.fun' url)
+		retries = (retries - 1)
+	}
+	if (isNil versionText) { return (array 0 0 0) }
+	return (splitWith (substring (first (lines versionText)) 1) '.')
+}
+
+method fetchLatestPilotVersionNumber MicroBlocksEditor {
+	versionText = (basicHTTPGet 'microblocks.fun' '/downloads/pilot/VERSION.txt')
+	if (isNil versionText) { return (array 0 0 0) }
+	versionLine = (first (lines versionText))
+	// take out "-pilot" first
+	return (splitWith (substring versionLine 1 ((count versionLine) - 6)) '.')
+}
+
+method reportNewerVersion MicroBlocksEditor {
+	versionString = (joinStrings newerVersion '.')
+	newerVersion = nil // clear this to avoid repeated calls from step
+	(inform (global 'page') (join
+			'A new MicroBlocks version has been released (' versionString ').' (newline)
+			(newline)
+			'Get it now at http://microblocks.fun')
+		'New version available'
+	)
+}
+
+// user preferences
+
+method readUserPreferences MicroBlocksEditor {
+	result = (dictionary)
+	jsonString = (browserReadPrefs)
+	waitMSecs 20 // timer for callback in ChromeOS
+	jsonString = (browserReadPrefs) // will have result the second time
+	if (notNil jsonString) {
+		result = (jsonParse jsonString)
+		if (not (isClass result 'Dictionary')) { result = (dictionary) }
+	}
+	return result
+}
+
+method isChineseWebapp MicroBlocksEditor {
+	url = (browserURL)
+	return (or
+		((containsSubString url 'microblocksfun.cn') > 0)
+		((containsSubString url 'blocks.aimaker.space') > 0)
+		(browserHasLanguage 'zh')
+	)
+}
+
+method applyUserPreferences MicroBlocksEditor {
+	prefs = (readUserPreferences this)
+	if (notNil (at prefs 'locale')) {
+		setLanguage this (at prefs 'locale')
+	} (isChineseWebapp this) {
+		setLanguage this 'zh_chs'
+	} else {
+		setLanguage this 'en'
+	}
+	if (notNil (at prefs 'versionCheckOnStartup')) {
+		versionCheckOnStartup = (at prefs 'versionCheckOnStartup')
+	} else {
+		versionCheckOnStartup = true
+	}
+	if (notNil (at prefs 'boardLibAutoLoadDisabled')) {
+		boardLibAutoLoadDisabled = (at prefs 'boardLibAutoLoadDisabled')
+	}
+	if (notNil (at prefs 'autoDecompile')) {
+		autoDecompile = (at prefs 'autoDecompile')
+	}
+	if (notNil (at prefs 'blockSizePercent')) {
+		percent = (at prefs 'blockSizePercent')
+		setGlobal 'blockScale' ((clamp percent 25 500) / 100)
+	}
+	if (notNil (at prefs 'devMode')) {
+		setDevMode (global 'page') (at prefs 'devMode')
+		developerModeChanged this
+	}
+	if (notNil (at prefs 'showImplementationBlocks')) {
+		showHiddenBlocks = (at prefs 'showImplementationBlocks')
+	}
+	if (notNil (at prefs 'darkMode')) {
+		darkMode = (at prefs 'darkMode')
+	}
+	darkModeChanged scripter fromInitialize // applies proper colors to it all
+}
+
+method saveToUserPreferences MicroBlocksEditor key value {
+	prefs = (readUserPreferences this)
+	if (isNil value) {
+		remove prefs key
+	} else {
+		atPut prefs key value
+	}
+	browserWritePrefs (jsonStringify prefs)
+}
+
+method toggleBoardLibAutoLoad MicroBlocksEditor {
+	boardLibAutoLoadDisabled = (not (boardLibAutoLoadDisabled this))
+	saveToUserPreferences this 'boardLibAutoLoadDisabled' boardLibAutoLoadDisabled
+}
+
+method boardLibAutoLoadDisabled MicroBlocksEditor {
+	return (boardLibAutoLoadDisabled == true)
+}
+
+method toggleAutoDecompile MicroBlocksEditor {
+	autoDecompile = (not (autoDecompileEnabled this))
+	saveToUserPreferences this 'autoDecompile' autoDecompile
+}
+
+method autoDecompileEnabled MicroBlocksEditor {
+	return false // this feature is disabled; always return false
+//	return (autoDecompile == true)
+}
+
+method openVMFolder MicroBlocksEditor {
+	if isPilot {
+		url = 'https://microblocks.fun/downloads/pilot/vm/'
+	} else {
+		url = 'https://microblocks.fun/downloads/latest/vm/'
+	}
+	openURL url
+}
+
+method toggleShowHiddenBlocks MicroBlocksEditor {
+	showHiddenBlocks = (not (showHiddenBlocksEnabled this))
+	saveToUserPreferences this 'showImplementationBlocks' showHiddenBlocks
+	developerModeChanged this // updates the palette
+}
+
+method showHiddenBlocksEnabled MicroBlocksEditor {
+	return (and (devMode) (showHiddenBlocks == true))
+}
+
+method toggleDarkMode MicroBlocksEditor {
+	darkMode = (not (darkModeEnabled this))
+	saveToUserPreferences this 'darkMode' darkMode
+	darkModeChanged scripter
+}
+
+method darkModeEnabled MicroBlocksEditor {
+	return (darkMode == true)
+}
+
+method toggleVersionCheck MicroBlocksEditor {
+	versionCheckOnStartup = (not versionCheckOnStartup)
+	saveToUserPreferences this 'versionCheckOnStartup' versionCheckOnStartup
+}
+
+// developer mode
+
+method developerModeChanged MicroBlocksEditor {
+	developerModeChanged scripter
+	fixLayout this
+}
+
+// layout
+
+method pageResized MicroBlocksEditor {
+	scale = (global 'scale')
+	page = (global 'page')
+	fixLayout this
+}
+
+// top bar properties
+
+method topBarBlue MicroBlocksEditor { return (microBlocksColor 'blueGray' 900) }
+
+// layout
+
+method fixLayout MicroBlocksEditor fromScripter {
+	setExtent morph (width (morph (global 'page'))) (height (morph (global 'page')))
+	if (true != fromScripter) { fixScripterLayout this }
+}
+
+method fixScripterLayout MicroBlocksEditor {
+	scale = (global 'scale')
+	if (isNil scripter) { return } // happens during initialization
+	m = (morph scripter)
+	setPosition m 0 0
+	w = (width (morph (global 'page')))
+	h = (max 1 ((height (morph (global 'page'))) - (top m)))
+	setExtent m w h
+	fixLayout scripter
+}
+
+// gear menu
+
+method gearMenu MicroBlocksEditor {
+	isConnected = ('connected' == (updateConnection (smallRuntime)))
+	menu = (menu 'MicroBlocks' this)
+	setIsTopMenu menu true
+	addItem menu 'about...' (action 'showAboutBox' (smallRuntime))
+	addLine menu
+	addItem menu 'update firmware on board' (action 'installVM' (new 'MicroBlocksFirmwareInstaller') false) // do not erase flash
+	addLine menu
+	addItem menu 'inform of new versions' (action 'toggleVersionCheck' this false) 'when opening the IDE, show a notification if a new version of MicroBlocks has been released' (newCheckmark this versionCheckOnStartup)
+	addItem menu 'dark mode' (action 'toggleDarkMode' this false) 'make the IDE darker' (newCheckmark this (darkModeEnabled this))
+	addItem menu 'advanced mode' 'toggleAdvancedMode' 'show advanced blocks, menu items and editor functionalities' (newCheckmark this (devMode))
+
+	if (devMode) {
+		addLine menu
+		addItem menu 'show implementation blocks' (action 'toggleShowHiddenBlocks' this) 'show blocks and variables that are internal to libraries (i.e. those whose name begins with underscore)' (newCheckmark this (showHiddenBlocksEnabled this))
+		addItem menu 'autoload board libraries' (action 'toggleBoardLibAutoLoad' this) nil (newCheckmark this (not (boardLibAutoLoadDisabled this)))
+// Does anyone ever enable 'PlugShare when project empty'?
+//		addItem menu 'PlugShare when project empty' (action 'toggleAutoDecompile' this) 'when plugging a board, automatically read its contents into the IDE if the current project is empty' (newCheckmark this (autoDecompileEnabled this))
+		addLine menu
+		addItem menu 'open vm folder on microblocks.fun' (action 'openVMFolder' this)
+		addLine menu
+		addItem menu 'install ESP firmware from URL' (action 'installESPFirmwareFromURL' (new 'MicroBlocksFirmwareInstaller'))
+		addItem menu 'install ESP firmware from microblocks.fun' (action 'installESPFirmwareFromRepo' (new 'MicroBlocksFirmwareInstaller'))
+		addItem menu 'erase flash and update firmware on ESP board' (action 'installVM' (new 'MicroBlocksFirmwareInstaller') true) // erase flash, then install firmware
+		addLine menu
+		if (and
+				isConnected
+				(boardIsBLECapable (smallRuntime))
+				(not (connectedViaBLE (smallRuntime)))
+			) {
+				addLine menu
+				addItem menu 'enable or disable BLE' (action 'setBLEFlag' (smallRuntime))
+		}
+		addLine menu
+		addItem menu 'show program size on board' (action 'sendMsg' (smallRuntime) 'systemResetMsg' 2 nil) nil nil true (not isConnected)
+	}
+	return menu
+}
+
+method downloadTest MicroBlocksEditor {
+	fileName = (trim (freshPrompt (global 'page') 'URL?' 'vm_esp32.bin'))
+	t = (newTimer)
+	data = (httpGetBinary 'microblocks.fun' (join '/downloads/pilot/vm/' fileName))
+	print 'got' (byteCount data) 'bytes in' (msecs t) 'msecs'
+}
+
+method hasHelpEntryFor MicroBlocksEditor aBlock {
+	return (notNil (helpEntry tipBar (primName (expression aBlock))))
+}
+
+method openHelp MicroBlocksEditor aBlockOrPath {
+	if (isClass aBlockOrPath 'String') {
+		helpPath = aBlockOrPath
+	} else {
+		entry = (helpEntry tipBar (primName (expression aBlockOrPath)))
+		if (isNil entry) { return }
+		helpPath = (at entry 2)
+	}
+	if (beginsWith helpPath '/') {
+		url = (join 'https://wiki.microblocks.fun' helpPath)
+	} else {
+		url = (join 'https://wiki.microblocks.fun/reference_manual/' helpPath)
+	}
+	openURL url
+}
+
+// Pretty Printer test
+
+method ppTest MicroBlocksEditor {
+	// Test the pretty printer by loading each example project and then generating its
+	// code string. The result should match the original file.
+
+	for fn (listEmbeddedFiles) {
+		if (beginsWith fn 'Examples') {
+			data1 = (readEmbeddedFile fn)
+			proj = (loadFromString (newMicroBlocksProject) data1)
+			data2 = (codeString proj)
+			if (data2 != data1) {
+				showMismatches this fn data1 data2
+			}
+		}
+	}
+}
+
+method showMismatches MicroBlocksEditor fn s1 s2 {
+	print 'MISMATCH!' (filePart fn)
+	lines1 = (nonEmptyLines this s1)
+	lines2 = (nonEmptyLines this s2)
+	if ((count lines1) != (count lines2)) {
+		print '  Line counts do not match' (count lines1) (count lines2)
+	}
+	mismatchCount = 0
+	for i (min (count lines1) (count lines2)) {
+		l1 = (at lines1 i)
+		l2 = (at lines2 i)
+		if (l1 != l2) {
+			print '    A: ' l1; print '    B: ' l2
+			mismatchCount += 1
+		}
+	}
+	print '  Mismatched lines:' mismatchCount
+}
+
+method nonEmptyLines MicroBlocksEditor s {
+	result = (list)
+	for line (lines s) {
+		if (line != '') { add result line }
+	}
+	return result
+}
+
+method cursorTest MicroBlocksEditor {
+	menu = (menu 'Cursor Test' this)
+	addItem menu 'default'				(action 'setCursor' 'default')
+	addItem menu 'text'						(action 'setCursor' 'text')
+	addItem menu 'wait'						(action 'setCursor' 'wait')
+	addItem menu 'crosshair'				(action 'setCursor' 'crosshair')
+
+	addItem menu 'nwse-resize'		(action 'setCursor' 'nwse-resize')
+	addItem menu 'nesw-resize'		(action 'setCursor' 'nesw-resize')
+	addItem menu 'ew-resize'				(action 'setCursor' 'ew-resize')
+	addItem menu 'ns-resize'				(action 'setCursor' 'ns-resize')
+
+	addItem menu 'move'						(action 'setCursor' 'move')
+	addItem menu 'not-allowed'		(action 'setCursor' 'not-allowed')
+	addItem menu 'pointer'				(action 'setCursor' 'pointer')
+
+	popUpAtHand menu (global 'page')
+}
+
+method showGraph MicroBlocksEditor {
+	graph = (findMorph 'MicroBlocksDataGraph')
+	if (notNil graph) { destroy graph }
+	page = (global 'page')
+	graph = (newMicroBlocksDataGraph)
+	graphM = (morph graph)
+	setPosition graphM (half ((width (morph page)) - (width graphM))) (50 * (global 'scale'))
+	restoreSettings graph
+	addPart page graph
+}
+
+method toggleAdvancedMode MicroBlocksEditor {
+	if (devMode) {
+		setAdvancedMode this false
+	} else {
+		setAdvancedMode this true
+	}
+}
+
+method setAdvancedMode MicroBlocksEditor aBoolean {
+	setDevMode (global 'page') aBoolean
+	saveToUserPreferences this 'devMode' aBoolean
+	developerModeChanged this
+}
+
+// Language Button
+
+method languageMenu MicroBlocksEditor {
+	menu = (menu 'Language' this)
+	setIsTopMenu menu true
+	for fn (sorted (listFiles 'translations')) {
+		fn = (withoutExtension fn)
+		if (isNil (findSubstring 'template' fn)) {
+			langCode = (withoutExtension fn)
+			addLanguangeMenuEntry this langCode menu
+		}
+	}
+
+	addLine menu
+	addItem menu (localized 'Missing language?') (action 'openHelp' this '/translating')
+
+	if (devMode) {
+		addLine menu
+		addItem menu 'Custom...' (action 'readCustomTranslationFile' this)
+	}
+	popUpAtHand menu (global 'page')
+}
+
+method addLanguangeMenuEntry MicroBlocksEditor langCode menu {
+	language = (languageNameForCode (authoringSpecs) langCode)
+	if (language == (language (authoringSpecs))) {
+		addItem menu language (action 'setLanguage' this langCode) nil (newCheckmark this true)
+	} (notNil language) {
+		addItem menu language (action 'setLanguage' this langCode)
+	}
+}
+
+method setLanguage MicroBlocksEditor langCode {
+	saveToUserPreferences this 'locale' langCode
+	setLanguage (authoringSpecs) langCode
+	// localizable user libraries
+	for lib (values (libraries (project this))) {
+		if (hasTranslationFor lib langCode) {
+			updateTranslation (authoringSpecs) (getTranslationSources lib langCode)
+		}
+	}
+	languageChanged this
+}
+
+method readCustomTranslationFile MicroBlocksEditor {
+	pickFileToOpen (action 'readCustomTranslation' this) nil (array '.po')
+}
+
+method readCustomTranslation MicroBlocksEditor fName {
+	languageName = (withoutExtension (filePart fName))
+	translationData = (readFile fName)
+	if (notNil translationData) {
+		installTranslation (authoringSpecs) translationData languageName
+		languageChanged this
+	}
+}
+
+method languageChanged MicroBlocksEditor {
+	setCursor 'wait'
+	languageChanged scripter
+	updateIndicator this true
+	setCursor 'default'
+}
+
+// Iconic menus
+
+method settingsMenu MicroBlocksEditor {
+	popUpAtHand (gearMenu this) (global 'page')
+}
+
+method addSVGIconButton MicroBlocksEditor iconName selector hint {
+	normalColor = (microBlocksColor 'blueGray' 500)
+	highlightColor = (microBlocksColor 'yellow')
+	button = (newButton '' (action selector this))
+	setCostumes button (readSVGIcon iconName normalColor) (readSVGIcon iconName highlightColor)
+	if (notNil hint) { setHint button (localized hint) }
+	addPart morph (morph button)
+	return button
+}
+
+method addTwoStateSVGIconButton MicroBlocksEditor iconName selector hint {
+	button = (newButton '' (action selector this))
+	iconScale = (global 'scale')
+	bm1 = (readSVGIcon iconName nil nil iconScale false)
+	bm2 = (readSVGIcon (join iconName '2') nil nil iconScale false)
+	setCostumes button bm1 bm2
+	if (notNil hint) { setHint button (localized hint) }
+	addPart morph (morph button)
+	return button
+}
+
+method addSVGIconButtonOldStyle MicroBlocksEditor iconName selector hint {
+	highlightColor = (microBlocksColor 'yellow')
+	bgColor = (topBarBlue this)
+	iconScale = (global 'scale')
+	button = (newButton '' (action selector this))
+	bm1 = (readSVGIcon iconName nil bgColor iconScale false)
+	bm2 = (readSVGIcon iconName highlightColor bgColor iconScale false)
+	setCostumes button bm1 bm2
+	if (notNil hint) { setHint button (localized hint) }
+	addPart morph (morph button)
+	return button
+}
+
+method newCheckmark MicroBlocksEditor isOn {
+	if isOn {
+		color = (microBlocksColor 'blueGray' 50)
+	} else {
+		color = (microBlocksColor 'blueGray' 500)
+	}
+	return (readSVGIcon 'checkmark' color)
+}
+
+method projectMenu MicroBlocksEditor {
+	menu = (menu 'File' this)
+	setIsTopMenu menu true
+	addItem menu 'Save' 'saveProjectToFile'
+	addLine menu
+	addItem menu 'New' 'newProject'
+	addItem menu 'Open' 'openProjectMenu'
+	if ('connected' != (updateConnection (smallRuntime))) {
+		addItem menu 'Open from board' 'openFromBoard'
+	} else {
+		checkBoardType (smallRuntime)
+	}
+	addLine menu
+	addItem menu 'Copy project URL to clipboard' 'copyProjectURLToClipboard'
+	if (devMode) {
+		if ((count (functions (main (project scripter)))) > 0) {
+			addLine menu
+			addItem menu 'export functions as library' (action 'exportAsLibrary' scripter fileName)
+		}
+		addLine menu
+		addItem menu 'put file on board' (action 'putFileOnBoard' (smallRuntime)) nil nil true (not (boardHasFileSystem (smallRuntime)))
+		addItem menu 'get file from board' (action 'getFileFromBoard' (smallRuntime)) nil nil true (not (boardHasFileSystem (smallRuntime)))
+		addLine menu
+		addItem menu 'snapshot code on board' (action 'snapshotCode' (smallRuntime) (text title)) nil nil true (not (boardHasFileSystem (smallRuntime)))
+	}
+	popUpAtHand menu (global 'page')
+}
+
+// Internal graphics performance tests
+
+to timeRedraw { timeRedraw (first (allInstances 'MicroBlocksEditor')) }
+
+method timeRedraw MicroBlocksEditor {
+	page = (global 'page')
+	scriptsM = (morph (scriptEditor scripter))
+	count = 100
+	t = (newTimer)
+	repeat count {
+		changed scriptsM
+		fixDamages page true
+	}
+	msecs = (msecs t)
+	print msecs 'msecs' ((1000 * count) / msecs) 'fps'
+}
+
+method redrawnMorphs MicroBlocksEditor {
+	// Shows the number of each type of morph redrawn by timeRedraw.
+
+	stats = (dictionary)
+	scriptsM = (morph (scriptEditor scripter))
+	for m (allMorphs scriptsM) {
+		add stats (className (classOf (handler m)))
+	}
+	for p (reversed (sortedPairs stats)) {
+		print p
+	}
+}
+
+// Script image utility
+
+method fixScriptsInFolderTree MicroBlocksEditor rootPath defaultCountryCode {
+	// Replaces all PNG files with one or multiple scripts with new ones with blocks re-drawn.
+	// The language will extracted from the locale in the file path (e.g. ".../locales/ca/...").
+	// If the path does not have a locale, defaultCountryCode will be used.
+	//
+	// Note: This script will remove any result bubbles shown in the original PNG file.
+	// Thus, before running this script, you may want to identify the scripts that
+	// have result bubbles using the findScriptsWithResults method, allowing those PNG's
+	// to be manually updated.
+	//
+	// fixScriptsInFolderTree (first (allInstances 'MicroBlocksEditor')) 'EXAMPLE_FOLDER'
+
+	if (isNil defaultCountryCode) { defaultCountryCode = 'en' }
+	setBlockScalePercent this 125 // scale for multiple script PNG images
+	setExportScale (scriptEditor scripter) 200 // scale for single script PNG images
+
+	for pngFilePath (allFiles rootPath '.png') {
+		if (isNil (findSubstring '/reference_manual' pngFilePath)) {
+			pngData = (readFile pngFilePath true)
+			pngReader = (new 'PNGReader')
+			scriptString = (getScriptText pngReader pngData pngFilePath)
+			if (notNil scriptString) {
+				fixPNGScriptImage this pngFilePath scriptString defaultCountryCode
+			}
+		}
+	}
+	setLanguage this 'en'
+}
+
+method fixPNGScriptImage MicroBlocksEditor pngFilePath scriptString countryCode {
+	scriptEditor = (scriptEditor scripter)
+
+	// load scripts from file
+	clearProject this
+	code = (extractCountryCode this pngFilePath countryCode)
+	setLanguage this code
+
+	importFromScriptString this scriptString
+	scriptCount = (count (parts (morph scriptEditor)))
+	if (0 == scriptCount) { return }
+
+	updateLibraryList scripter
+	cleanUp scriptEditor
+
+	gc
+	if (1 == scriptCount) {
+		block = (handler (first (parts (morph scriptEditor))))
+print '   ' pngFilePath
+		exportAsImageScaled block nil false pngFilePath
+	} else {
+print '* multiple scripts:' pngFilePath scriptCount
+		saveScriptsImage scriptEditor pngFilePath true
+	}
+	gc
+}
+
+method extractCountryCode MicroBlocksEditor filePath defaultCountryCode {
+	if (isNil defaultCountryCode) { defaultCountryCode = 'en' }
+	i = (findSubstring 'locales/' filePath)
+	if (isNil i) { return defaultCountryCode }
+	start = (i + 8)
+	end = (findSubstring '/' filePath start)
+	result = (substring filePath start (end - 1))
+	if ('cn' == result) { result = 'zh-chs' } // map 'cn' to Simplified Chinese
+	return result
+}
+
+method importFromScriptString MicroBlocksEditor scriptString {
+	if (isNil scriptString) { return } // no script in this PNG file
+	i = (find (letters scriptString) (newline))
+	scriptString = (substring scriptString i)
+	pasteScripts scripter scriptString
+}
+
+method findScriptsWithResults MicroBlocksEditor rootPath {
+	// Prints a list of script PNG files that have result bubbles in the given folder hierarchy.
+	// findScriptsWithResults (first (allInstances 'MicroBlocksEditor')) 'EXAMPLE_FOLDER'
+
+	for pngFilePath (allFiles rootPath '.png') {
+		pngData = (readFile pngFilePath true)
+		pngReader = (new 'PNGReader')
+		scriptString = (getScriptText pngReader pngData pngFilePath)
+		if (notNil scriptString) {
+			gc
+			bm = (readFrom pngReader pngData)
+			grayCount = (countTalkBubblePixels this bm)
+			if (grayCount > 100) {
+				print pngFilePath (width bm) 'x' (height bm) 'grays:' grayCount
+			}
+		}
+	}
+}
+
+method countTalkBubblePixels MicroBlocksEditor bm {
+	talkBubbleGray = (pixelRGB (gray 140))
+	result = 0
+	pixelData = (pixelData bm)
+	pixelCount = ((width bm) * (height bm))
+	for i pixelCount {
+		if ((getPixelRGB pixelData i) == talkBubbleGray) {
+			result += 1
+		}
+	}
+	return result
+}
+
+method countScriptPNGs MicroBlocksEditor rootPath {
+	// Prints a list of script PNG files that have result bubbles in the given folder hierarchy.
+	// findScriptsWithResults (first (allInstances 'MicroBlocksEditor')) 'EXAMPLE_FOLDER'
+
+	pngCount = 0
+	pngWithScriptCount = 0
+	for pngFilePath (allFiles rootPath '.png') {
+		pngCount += 1
+		pngData = (readFile pngFilePath true)
+		scriptString = (getScriptText (new 'PNGReader') pngData pngFilePath)
+		if (notNil scriptString) {
+print pngFilePath
+			pngWithScriptCount += 1
+		}
+	}
+	print pngWithScriptCount 'PNG files have scripts out of' pngCount
+}

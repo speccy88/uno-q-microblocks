@@ -1,0 +1,55 @@
+{
+  "after_stop": {
+    "1r": {
+      "brightness": 0,
+      "trigger": "none"
+    },
+    "1g": {
+      "brightness": 0,
+      "trigger": "none"
+    },
+    "1b": {
+      "brightness": 0,
+      "trigger": "none"
+    },
+    "2r": {
+      "brightness": 0,
+      "trigger": "none"
+    },
+    "2g": {
+      "brightness": 0,
+      "trigger": "phy0tx"
+    },
+    "2b": {
+      "brightness": 1,
+      "trigger": "bluetooth-power"
+    }
+  },
+  "original": {
+    "1r": {
+      "brightness": 0,
+      "trigger": "none"
+    },
+    "1g": {
+      "brightness": 0,
+      "trigger": "none"
+    },
+    "1b": {
+      "brightness": 0,
+      "trigger": "none"
+    },
+    "2r": {
+      "brightness": 0,
+      "trigger": "none"
+    },
+    "2g": {
+      "brightness": 0,
+      "trigger": "phy0tx"
+    },
+    "2b": {
+      "brightness": 1,
+      "trigger": "bluetooth-power"
+    }
+  },
+  "restored": true
+}

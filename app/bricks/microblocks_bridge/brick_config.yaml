@@ -1,0 +1,7 @@
+id: microblocks_bridge
+name: MicroBlocks Bridge
+description: Authenticated local web IDE, binary STM32 transport and onboard Linux LED service
+category: UI
+requires_display: webview
+supported_boards: [unoq]
+ports: ["8080"]

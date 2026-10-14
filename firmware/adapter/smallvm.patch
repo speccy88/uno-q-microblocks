@@ -1,0 +1,475 @@
+--- a/vm/interp.c
++++ b/vm/interp.c
+@@ -435,6 +435,7 @@
+ // Macro to inline dispatch in the end of each opcode (avoiding a jump back to the top)
+ #define DISPATCH() { \
+ 	if (errorCode) goto error; \
++	if (!instructionBudget--) goto suspend; \
+ 	op = *ip++; \
+ 	arg = ARG(op); \
+ 	task->sp = sp - task->stack; /* record stack pointer for garbage collector */ \
+@@ -453,6 +454,7 @@
+ #define OP_DECREMENT_AND_JUMP 26
+ 
+ static void runTask(Task *task) {
++	unsigned instructionBudget = 256;
+ 	register int op;
+ 	register int16 *ip;
+ 	register OBJ *sp;
+@@ -1392,12 +1394,12 @@
+ 	}
+ }
+ 
+-void vmLoop() {
++void vmSlice(unsigned cycles) {
+ 	// Run the next runnable task. Wake up any waiting tasks whose wakeup time has arrived.
+ 
+-	int currentTaskIndex = 0;
+-	int count = 0;
+-	while (true) {
++	static int currentTaskIndex = 0;
++	static int count = 0;
++	while (cycles--) {
+ 		if (count-- < 0) {
+ 			// do background VM tasks once every N VM loop cycles
+ 			processMessage();
+@@ -1462,6 +1464,8 @@
+ 	}
+ }
+ 
++void vmLoop() { while (true) vmSlice(1); }
++
+ #endif // not __EMSCRIPTEN__
+ 
+ // Boardie support
+--- a/vm/interp.h
++++ b/vm/interp.h
+@@ -238,6 +238,7 @@
+ int broadcastMatches(uint8 chunkIndex, char *msg, int byteCount);
+ void sendSayForChunk(char *s, int len, uint8 chunkIndex);
+ void vmLoop(void);
++void vmSlice(unsigned cycles);
+ void interpretStep();
+ void taskSleep(int msecs);
+ void taskSleepMicros(int usecs);
+--- a/vm/mem.c
++++ b/vm/mem.c
+@@ -37,7 +37,9 @@
+ // word of each chunk. That field is used by the marking phase of the garbage collector and to
+ // update (forward) references of objects that move during compaction and object resizing.
+ 
+-#if defined(NRF51)
++#if defined(SMALLVM_UNOQ)
++	#define OBJSTORE_BYTES 16384
++#elif defined(NRF51)
+ 	#define OBJSTORE_BYTES 1048
+ #elif defined(ARDUINO_BBC_MICROBIT_V2) || defined(ARDUINO_CALLIOPE_MINI_V3)
+ 	#define OBJSTORE_BYTES 45000
+--- a/vm/runtime.c
++++ b/vm/runtime.c
+@@ -13,7 +13,7 @@
+ #include <string.h>
+ #include <string.h>
+ 
+-#ifdef __ZEPHYR__
++#if defined(__ZEPHYR__) && !defined(SMALLVM_UNOQ)
+ 	#include <Arduino.h>
+ #endif
+ 
+@@ -26,7 +26,7 @@
+ #include "persist.h"
+ #include "version.h"
+ 
+-void delay(unsigned long); // Arduino delay function
++void unoDelay(unsigned long); // Arduino delay function
+ 
+ // Forward Reference Declarations
+ 
+@@ -34,6 +34,14 @@
+ static void sendMessage(int msgType, int chunkIndex, int dataSize, char *data);
+ static void sendChunkCRC(int chunkID);
+ static void sendData();
++static void bulkTick();
++static int bulkKind, bulkIndex;
++static int *bulkVar;
++uint32 unoRxTimeouts, unoTxFaults;
++int unoOutputFaulted;
++void unoTransportFault(void);
++void unoRuntimeResetTransport(void);
++
+ 
+ // DUELink support
+ 
+@@ -595,7 +603,7 @@
+ // Sending Messages to IDE
+ 
+ // Circular output buffer
+-#define OUTBUF_SIZE 1024 // must be a power of 2!
++#define OUTBUF_SIZE 2048 // must be a power of 2!
+ #define OUTBUF_MASK (OUTBUF_SIZE - 1)
+ static uint8 outBuf[OUTBUF_SIZE];
+ static int outBufStart = 0;
+@@ -630,20 +638,27 @@
+ #endif
+ }
+ 
++static void outputFault(void) {
++ if (!unoOutputFaulted) { unoOutputFaulted=1; ++unoTxFaults; }
++ outBufStart=outBufEnd=0; bulkKind=0; bulkVar=NULL;
++ unoTransportFault(); // drop the partial stream explicitly; client must open a new session
++}
+ static inline void queueByte(uint8 aByte) {
++ if (unoOutputFaulted) return;
+ 	outBuf[outBufEnd] = aByte;
+ 	outBufEnd = (outBufEnd + 1) & OUTBUF_MASK;
+ }
+ 
+ static void sendMessage(int msgType, int chunkIndex, int dataSize, char *data) {
++ if (unoOutputFaulted) return;
+ 	if (!data) { // short message
+-		if (!hasOutputSpace(3)) return; // no space; drop message
++		if (!hasOutputSpace(3)) { outputFault(); return; } // no space; drop message
+ 		queueByte(250);
+ 		queueByte(msgType);
+ 		queueByte(chunkIndex);
+ 	} else {
+ 		int totalBytes = 5 + dataSize;
+-		if (!hasOutputSpace(totalBytes)) return; // no space; drop message
++		if (!hasOutputSpace(totalBytes)) { outputFault(); return; } // no space; drop message
+ 		queueByte(251);
+ 		queueByte(msgType);
+ 		queueByte(chunkIndex);
+@@ -655,20 +670,21 @@
+ 	}
+ }
+ 
+-int hasOutputSpace(int byteCount) { return ((OUTBUF_MASK - OUTBUF_BYTES()) > byteCount); }
+-
+-static void waitForOutbufBytes(int bytesNeeded) {
+-	// Wait until there is room for the given number of bytes in the output buffer.
+-
+-	while (bytesNeeded > (OUTBUF_MASK - OUTBUF_BYTES())) {
+-		sendData(); // should eventually create enough room for bytesNeeded
+-	}
++int hasOutputSpace(int byteCount) { return !unoOutputFaulted && ((OUTBUF_MASK - OUTBUF_BYTES()) > byteCount); }
++
++static int waitForOutbufBytes(int bytesNeeded) {
++ if (unoOutputFaulted) return 0;
++ sendData();
++ if (bytesNeeded >= OUTBUF_SIZE || bytesNeeded > OUTBUF_MASK-OUTBUF_BYTES()) {
++  outputFault(); return 0;
++ }
++ return 1;
+ }
+ 
+ void waitAndSendMessage(int msgType, int chunkIndex, int dataSize, char *data) {
+ 	// Wait for space, then send the given message.
+ 
+-	waitForOutbufBytes(dataSize + 5);
++	if (!waitForOutbufBytes(dataSize + 5)) return;
+ 	sendMessage(msgType, chunkIndex, dataSize, data);
+ }
+ 
+@@ -800,13 +816,11 @@
+ 		data[i + 1] = s[i];
+ 	}
+ 
+-	waitForOutbufBytes(byteCount + 50);
++	if (!waitForOutbufBytes(byteCount + 50)) return;
+ 	sendMessage(outputValueMsg, 255, (byteCount + 1), data);
+ 
+ 	// wait for string to be sent:
+-	while (ideConnected() && (OUTBUF_BYTES() > 0)) {
+-		sendData(); // should eventually create enough room for bytesNeeded
+-	}
++	sendData(); // nonblocking: subsequent VM slices drain the queue
+ }
+ 
+ void sendTaskDone(uint8 chunkIndex) {
+@@ -886,7 +900,7 @@
+ 		if (!ideConnected()) {
+ 			return; // apparently not connected to IDE
+ 		} else {
+-			waitForOutbufBytes(spaceNeeded);
++			if (!waitForOutbufBytes(spaceNeeded)) return;
+ 		}
+ 	}
+ 	sendMessage(broadcastMsg, 0, len, s);
+@@ -956,55 +970,19 @@
+ 		int wordCount = *(code + 1); // size is the second word in the persistent store record
+ 		uint8_t *chunkData = (uint8_t *) (code + PERSISTENT_HEADER_WORDS);
+ 		uint32_t crc = crc32(chunkData, (4 * wordCount));
+-		waitForOutbufBytes(9);
++		if (!waitForOutbufBytes(9)) return;
+ 		sendMessage(chunkCRCMsg, chunkID, 4, (char *) &crc);
+ 		sendData();
+ 	}
+ }
+ 
+-void sendAllCRCs() {
+-	// count chunks
+-	int chunkCount = 0;
+-	for (int i = 0; i < MAX_CHUNKS; i++) {
+-		if (chunks[i].code) chunkCount++;
+-	}
+-
+-	// send message header
+-	int dataSize = 5 * chunkCount;
+-	waitForOutbufBytes(10);
+-	queueByte(251);
+-	queueByte(allCRCsMsg);
+-	queueByte(0);
+-	queueByte(dataSize & 0xFF); // low byte of size
+-	queueByte((dataSize >> 8) & 0xFF); // high byte of size
+-
+-	// send CRC records for chunks in use
+-	// each record is 5 bytes: chunkID (one byte) + the CRC for that chunk (four bytes)
+-	int delayPerCRC = extraByteDelay / 250; // msec delay for 4 bytes (extraByteDelay is in usecs)
+-	for (int i = 0; i < MAX_CHUNKS; i++) {
+-		if (chunks[i].code) {
+-			OBJ code = chunks[i].code;
+-			int wordCount = *(code + 1); // size is the second word in the persistent store record
+-			uint8_t *chunkData = (uint8_t *) (code + PERSISTENT_HEADER_WORDS);
+-			uint32_t crc = crc32(chunkData, (4 * wordCount));
+-			char *crcBytes = (char *) &crc;
+-			waitForOutbufBytes(5);
+-			queueByte(i);
+-			queueByte(crcBytes[0]);
+-			queueByte(crcBytes[1]);
+-			queueByte(crcBytes[2]);
+-			queueByte(crcBytes[3]);
+-			delay(delayPerCRC);
+-		}
+-	}
+-	deferIDEDisconnect();
+-}
++void sendAllCRCs() {bulkKind=1;bulkIndex=0;}
+ 
+ // Retrieving source code
+ 
+ static void sendCodeChunk(int chunkID, int chunkType, int chunkBytes, char *chunkData) {
+ 	int msgSize = 1 + chunkBytes;
+-	waitForOutbufBytes(5 + msgSize);
++	if (!waitForOutbufBytes(5 + msgSize)) return;
+ 	queueByte(251);
+ 	queueByte(chunkCode16Msg);
+ 	queueByte(chunkID);
+@@ -1017,24 +995,7 @@
+ 	}
+ }
+ 
+-static void sendAllCode() {
+-	// Send the code for all chunks to the IDE.
+-
+-	int delayPerWord = extraByteDelay / 250; // derive from extraByteDelay
+-	for (int chunkID = 0; chunkID < MAX_CHUNKS; chunkID++) {
+-		OBJ code = chunks[chunkID].code;
+-		if (NULL == code) continue; // skip unused chunk entry
+-
+-		int chunkType = chunks[chunkID].chunkType;
+-		int chunkWords = *(code + 1); // chunk word count is second word of persistent store record
+-		char *chunkData = (char *) (code + PERSISTENT_HEADER_WORDS);
+-		sendCodeChunk(chunkID, chunkType, (4 * chunkWords), chunkData);
+-		sendData();
+-		delay(delayPerWord * chunkWords); // 2 fails on Johns Chromebook; 3 works; 5 is conservative
+-		sendData();
+-	}
+-	deferIDEDisconnect();
+-}
++static void sendAllCode() {bulkKind=2;bulkIndex=0;}
+ 
+ // Variable support
+ 
+@@ -1043,7 +1004,7 @@
+ 
+ 	char *varName = (char *) (persistentRecord + 2);
+ 	int bodyBytes = strlen(varName);
+-	waitForOutbufBytes(5 + bodyBytes);
++	if (!waitForOutbufBytes(5 + bodyBytes)) return;
+ 
+ 	queueByte(251);
+ 	queueByte(varNameMsg);
+@@ -1068,18 +1029,7 @@
+ 	return result;
+ }
+ 
+-static void sendVarNames() {
+-	// Send the names of all variables.
+-
+-	int *p = varsStart();
+-	while (p) {
+-		int recType = (*p >> 16) & 0xFF;
+-		int varID = (*p >> 8) & 0xFF;
+-		if (recType == varName) sendVarNameMessage(varID, p);
+-		p = recordAfter(p);
+-	}
+-	deferIDEDisconnect();
+-}
++static void sendVarNames() {bulkKind=3;bulkVar=varsStart();}
+ 
+ int indexOfVarNamed(const char *s) {
+ 	// Return the index of the given variable or -1 if not found.
+@@ -1099,6 +1049,33 @@
+ 	return result;
+ }
+ 
++static void bulkTick() {
++ if (unoOutputFaulted) {bulkKind=0;return;}
++ if (bulkKind==1) {
++  int count=0;for(int i=0;i<MAX_CHUNKS;i++)if(chunks[i].code)count++;
++  if(!hasOutputSpace(5+count*5))return;
++  queueByte(251);queueByte(allCRCsMsg);queueByte(0);queueByte((count*5)&255);queueByte((count*5)>>8);
++  for(int i=0;i<MAX_CHUNKS;i++)if(chunks[i].code) {
++   OBJ c=chunks[i].code;uint32 value=crc32((uint8*)(c+2),4*(*(c+1)));
++   queueByte(i);for(int b=0;b<4;b++)queueByte(value>>(8*b));
++  }
++  bulkKind=0;
++ } else if(bulkKind==2) {
++  while(bulkIndex<MAX_CHUNKS && !chunks[bulkIndex].code)bulkIndex++;
++  if(bulkIndex==MAX_CHUNKS){bulkKind=0;return;}
++  OBJ c=chunks[bulkIndex].code;int n=4*(*(c+1));
++  if(6+n>=OUTBUF_SIZE){outputFault();return;}
++  if(!hasOutputSpace(6+n))return;
++  sendCodeChunk(bulkIndex,chunks[bulkIndex].chunkType,n,(char*)(c+2));bulkIndex++;
++ } else if(bulkKind==3) {
++  while(bulkVar && ((*bulkVar>>16)&255)!=varName)bulkVar=recordAfter(bulkVar);
++  if(!bulkVar){bulkKind=0;return;}
++  int n=strlen((char*)(bulkVar+2));if(!hasOutputSpace(5+n))return;
++  sendVarNameMessage((*bulkVar>>8)&255,bulkVar);bulkVar=recordAfter(bulkVar);
++ }
++ sendData();
++}
++
+ // Startup gestures
+ 
+ void loadStartCodeOrClear() {
+@@ -1142,16 +1119,16 @@
+ 			if (startupClickCount >= 4) {
+ 				beep(784, 200); // G
+ 				beep(659, 200); // E
+-				delay(400); // silence
++				unoDelay(400); // silence
+ 				loadStartCodeOrClear();
+ 				startAll();
+ 				startupClickCount = 0;
+ 			}
+-			delay(10); // debounce down transition
++			unoDelay(10); // debounce down transition
+ 			startupButtonPressed = true;
+ 		}
+ 	} else {
+-		if (startupButtonPressed) delay(10); // debounce up transition
++		if (startupButtonPressed) unoDelay(10); // debounce up transition
+ 		startupButtonPressed = false;
+ 	}
+ }
+@@ -1169,6 +1146,7 @@
+ static uint8 rcvBuf[RCVBUF_SIZE];
+ static int rcvByteCount = 0;
+ uint32 lastRcvTime = 0;
++static uint32 lastByteTime;
+ 
+ static void skipToStartByteAfter(int startIndex) {
+ 	int i, nextStart = -1;
+@@ -1194,13 +1172,7 @@
+ 	rcvByteCount -= nextStart;
+ }
+ 
+-static int receiveTimeout() {
+-	// Check for receive timeout. This allows recovery from bad length or incomplete message.
+-
+-	uint32 usecs = microsecs();
+-	if (usecs < lastRcvTime) lastRcvTime = 0; // clock wrap
+-	return (usecs - lastRcvTime) > 20000;
+-}
++static int receiveTimeout() { return (uint32)(microsecs()-lastByteTime)>250000; }
+ 
+ #if !defined(GNUBLOCKS) || defined(__EMSCRIPTEN__)
+ 
+@@ -1326,7 +1298,7 @@
+ 
+ static void processLongMessage() {
+ 	int msgLength = (rcvBuf[4] << 8) | rcvBuf[3];
+-	if ((rcvByteCount >= 5) && (msgLength > MAX_MSG_SIZE)) { // message too large for buffer
++	if ((rcvByteCount >= 5) && (msgLength < 1 || msgLength > MAX_MSG_SIZE)) { // message too large for buffer
+ 		skipToStartByteAfter(1);
+ 		return;
+ 	}
+@@ -1345,9 +1317,10 @@
+ 	int bodyBytes = msgLength - 1; // subtract terminator byte
+ 	switch (cmd) {
+ 	case chunkCode16Msg: // code chunk from 16-bit IDE
++  if(bodyBytes<3 || (bodyBytes&1)==0)break;
+ 		sendPingNow(chunkIndex); // send a ping to acknowledge receipt
+ 		#if defined(ESP32_S3)
+-			delay(10); // avoid chunk save glitches on m5atom-lite; less than 5 msecs fails
++			unoDelay(10); // avoid chunk save glitches on m5atom-lite; less than 5 msecs fails
+ 		#endif
+ 		storeCodeChunk(chunkIndex, bodyBytes, &rcvBuf[5]);
+ 		sendChunkCRC(chunkIndex);
+@@ -1389,8 +1362,21 @@
+ //	while ((microsecs() - start) < (uint32) usecs) /* wait */;
+ // }
+ 
++static void expirePartialHead(void) {
++ if(!rcvByteCount || !receiveTimeout())return;
++ int partial=0;
++ if(rcvBuf[0]==250)partial=rcvByteCount<3;
++ if(rcvBuf[0]==251)partial=rcvByteCount<5 || (rcvByteCount>=5 && rcvByteCount<5+((rcvBuf[4]<<8)|rcvBuf[3]));
++ if(partial){rcvByteCount=0;++unoRxTimeouts;}
++}
++void unoRuntimeResetTransport(void) {
++ outBufStart=outBufEnd=0;rcvByteCount=0;lastByteTime=lastRcvTime=0;
++ bulkKind=bulkIndex=0;bulkVar=NULL;unoOutputFaulted=0;
++}
+ void captureIncomingBytes() {
++	expirePartialHead();
+ 	int bytesRead = recvBytes(&rcvBuf[rcvByteCount], RCVBUF_SIZE - rcvByteCount);
++	if(bytesRead>0)lastByteTime=lastRcvTime=microsecs();
+ 	rcvByteCount += bytesRead;
+ 	// uncomment to check for serial buffer overruns:
+ 	// if (bytesRead > 49) reportNum("bytesRead", bytesRead);
+@@ -1399,8 +1385,12 @@
+ void processMessage() {
+ 	// Process a message from the client.
+ 	sendData();
+-
++ if(unoOutputFaulted)return;
++ if(bulkKind){bulkTick();return;}
++
++	expirePartialHead();
+ 	int bytesRead = recvBytes(&rcvBuf[rcvByteCount], RCVBUF_SIZE - rcvByteCount);
++	if(bytesRead>0)lastByteTime=lastRcvTime=microsecs();
+ 	// uncomment to check for serial buffer overruns:
+ 	// if (bytesRead > 49) reportNum("bytesRead", bytesRead);
+ 	rcvByteCount += bytesRead;
+@@ -1414,7 +1404,6 @@
+ // 		rcvByteCount += bytesRead;
+ // 	}
+ 
+-	lastRcvTime = microsecs();
+ 	int firstByte = rcvBuf[0];
+ 	if (0xFA == firstByte) {
+ 		processShortMessage();
+--- a/vm/persist.c
++++ b/vm/persist.c
+@@ -436,7 +436,7 @@
+ 		spi_flash_write(flashAddr(dst), src, 4 * wordCount);
+ 	}
+ 
+-#elif defined(__ZEPHYR__)
++#elif defined(__ZEPHYR__) && !defined(SMALLVM_UNOQ)
+ 
+ #include <zephyr/drivers/flash.h>
+ #include <zephyr/storage/flash_map.h>
+@@ -523,7 +523,9 @@
+ 
+ 	#define RAM_CODE_STORE true
+ 
+-	#if defined(ESP8266)
++	#if defined(SMALLVM_UNOQ)
++		#define HALF_SPACE (16 * 1024)
++	#elif defined(ESP8266)
+ 		#define USE_CODE_FILE true
+ 		#define HALF_SPACE (18 * 1024) // ESP8266 is unreliable at 24
+ 	#elif defined(ESP32_S3) || defined(ESP32_C3)

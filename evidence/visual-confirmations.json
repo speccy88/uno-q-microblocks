@@ -1,0 +1,21 @@
+{
+  "recorded_at_utc": "2026-10-14T00:13:23Z",
+  "timestamp_scope": "Time recorded; individual message timestamps unavailable",
+  "source": "Direct owner messages while the physical combined hardware example was running",
+  "observations": [
+    {
+      "quote": "i now see heart and checker",
+      "result": "PASS",
+      "scope": "Recognizable physical matrix heart and checkerboard"
+    },
+    {
+      "quote": "i see also red green blue, each led at a time",
+      "result": "PASS",
+      "scope": "Physical RGB colors and sequential LED activation"
+    }
+  ],
+  "not_measured": [
+    "Exact matrix orientation",
+    "Optical grayscale linearity"
+  ]
+}

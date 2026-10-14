@@ -1,0 +1,12 @@
+microblocks-uno-q-microblocks_bridge_edge-1
+[INFO] Starting app "MicroBlocks UNO Q"
+Progress[preparing]: 0%
+[INFO] python provisioning
+Progress[python provisioning]: 0%
+[INFO] python downloading
+[INFO]  Container microblocks-uno-q-main-1  Recreate
+[INFO]  Container microblocks-uno-q-main-1  Recreated
+[INFO]  Container microblocks-uno-q-main-1  Starting
+[INFO]  Container microblocks-uno-q-main-1  Started
+Progress[]: 100%
+✓ App "MicroBlocks UNO Q" started successfully
